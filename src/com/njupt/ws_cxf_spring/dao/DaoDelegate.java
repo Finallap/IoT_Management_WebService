@@ -20,4 +20,12 @@ public class DaoDelegate {
 		return dao.sayHello();
 	}
 
+	public int insertstudent(String name) {
+		return dao.insertstudent(name);
+	}
+
+	public String getStudentnamebyID(int ID) {
+		return dao.getStudentnamebyID(ID);
+	}
+
 }
