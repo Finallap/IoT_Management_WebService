@@ -4,9 +4,11 @@ import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,61 +65,6 @@ public class Dao {
 		//ds.setMaxConnectionAge(50);
 	}
 	
-	public int insertstudent(String name) {
-		
-		String sql = "INSERT INTO `test`.`student` (`name`) VALUES (?);";
-		int flag=0;
-		try {
-			conn = ds.getConnection();
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, name);
-			flag = pstmt.executeUpdate();
-			return flag;
-		}catch(Exception e){
-			e.printStackTrace();
-		} finally {
-			try{
-				if (pstmt != null)
-					pstmt.close();
-				if (conn != null)
-					conn.close();				
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		return flag;
-	}
-	
-	public String getStudentnamebyID(int ID){
-		String name = "";
-		String sql = "SELECT * FROM `user`";
-		try {
-			conn = ds.getConnection();
-			pstmt = conn.prepareStatement(sql);
-//			pstmt.setInt(1, ID);
-			rs = pstmt.executeQuery();
-			System.out.println("getUserIDByUsername(String username)");
-			while (rs.next()) {
-				name=rs.getString(1);
-			}
-			return name;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (pstmt != null)
-					pstmt.close();
-				if (conn != null)
-					conn.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return name;
-	}
-	
 	/**
 	 * 判断用户是否合法
 	 * 
@@ -138,7 +85,8 @@ public class Dao {
 			pstmt.setString(1, username);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				a = Tools.getMD5Str(rs.getString(3));
+//				a = Tools.getMD5Str(rs.getString(4));
+				a = rs.getString(4);
 				System.out.println("用户注册在数据库中的密码："+a);
 				if (a.equals(b)) {
 					c = rs.getInt(1);
@@ -172,14 +120,18 @@ public class Dao {
 	public String userRegister(String username, String password,String email) {
 		boolean exist=findByUsername(username);
 		if(!exist){
-			String sql = "insert into user values(NULL, ?, ?, ?, NULL, '0')";
+			String sql = "insert into user values(NULL, ?, ?, ?, ?, '0')";
+			
+			String encrypted_password = Tools.getMD5Str(password);
+			System.out.println("加密后的密码："+encrypted_password);
+			
 			try {
 				conn = ds.getConnection();
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, username);
-				pstmt.setString(2, password);
-				pstmt.setString(3, email);
-//				pstmt.setString(4, email);
+				pstmt.setString(2, email);
+				pstmt.setString(3, encrypted_password);
+				pstmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 				int flag = pstmt.executeUpdate();
 				if(flag==1){
 					System.out.println("userRegister: success");
@@ -213,7 +165,7 @@ public class Dao {
 	 */
 	public boolean findByUsername(String username){
 		boolean value=false;
-		String sql = "select count(*) from w_users where username=?";
+		String sql = "select count(*) from user where UserName=?";
 		try {
 			conn = ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -243,4 +195,5 @@ public class Dao {
 		}
 		return value;
 	}
+	
 }
