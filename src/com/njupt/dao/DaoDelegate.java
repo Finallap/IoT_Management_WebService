@@ -1,4 +1,4 @@
-package com.njupt.ws_cxf_spring.dao;
+package com.njupt.dao;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 @javax.jws.WebService(targetNamespace = "http://dao.ws_cxf_spring.njupt.com/", serviceName = "DaoService", portName = "DaoPort")
 public class DaoDelegate {
 
-	com.njupt.ws_cxf_spring.dao.Dao dao = new com.njupt.ws_cxf_spring.dao.Dao();
+	com.njupt.dao.Dao dao = new com.njupt.dao.Dao();
 
 	public String sayHello() {
 		return dao.sayHello();

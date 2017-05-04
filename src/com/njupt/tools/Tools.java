@@ -1,4 +1,4 @@
-﻿package com.njupt.ws_cxf_spring.tools;
+﻿package com.njupt.tools;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;

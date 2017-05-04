@@ -1,4 +1,4 @@
-package com.njupt.ws_cxf_spring.bean;
+package com.njupt.bean;
 
 public class Student {
 	int ID;
