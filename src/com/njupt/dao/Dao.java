@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.njupt.tools.Tools;
 
 //import net.sf.json.JSONArray;
 
 public class Dao {
 	
-	private static final String url = "jdbc:mysql://localhost:3306/test";
+	private static final String url = "jdbc:mysql://localhost:3306/iot_management";
 	private static final String user = "root";
 	private static final String userpass = "";
 	private static ComboPooledDataSource ds;
@@ -89,11 +90,11 @@ public class Dao {
 	
 	public String getStudentnamebyID(int ID){
 		String name = "";
-		String sql = "SELECT * FROM `student` WHERE `ID` = ?";
+		String sql = "SELECT * FROM `user`";
 		try {
 			conn = ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, ID);
+//			pstmt.setInt(1, ID);
 			rs = pstmt.executeQuery();
 			System.out.println("getUserIDByUsername(String username)");
 			while (rs.next()) {
@@ -115,5 +116,131 @@ public class Dao {
 			}
 		}
 		return name;
+	}
+	
+	/**
+	 * 判断用户是否合法
+	 * 
+	 * @param username
+	 * @param password
+	 * @return
+	 * @return
+	 */
+	public int islegalUser(String username, String password) {
+		String sql = "select * from user where UserName = ?";
+		int c = 0;
+		String b = Tools.getMD5Str(password);
+		System.out.println("用户输入的密码："+b);
+		String a = "";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				a = Tools.getMD5Str(rs.getString(3));
+				System.out.println("用户注册在数据库中的密码："+a);
+				if (a.equals(b)) {
+					c = rs.getInt(1);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return c;
+	}
+	
+	/**
+	 * 用户注册
+	 * @param username
+	 * @param password
+	 * @param telnum
+	 * @return{res:}
+	 * @throws Exception
+	 */
+	public String userRegister(String username, String password,String email) {
+		boolean exist=findByUsername(username);
+		if(!exist){
+			String sql = "insert into user values(NULL, ?, ?, ?, NULL, '0')";
+			try {
+				conn = ds.getConnection();
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, username);
+				pstmt.setString(2, password);
+				pstmt.setString(3, email);
+//				pstmt.setString(4, email);
+				int flag = pstmt.executeUpdate();
+				if(flag==1){
+					System.out.println("userRegister: success");
+					return "{\"res\":\"success\"}";			
+				}
+			}catch(Exception e){			
+				e.printStackTrace();
+			} finally {
+				try {
+					if (pstmt != null)
+						pstmt.close();
+					if (conn != null)
+						conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			System.out.println("userRegister: failed");
+			return "{\"res\":\"failed\"}";
+		}else{
+			System.out.println("userRegister: 用户名已存在");
+			return "{\"res\":\"用户名已存在\"}";
+		}
+	}
+	
+	/**
+	 * 注册时用来判断用户名是否存在
+	 * @param username
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean findByUsername(String username){
+		boolean value=false;
+		String sql = "select count(*) from w_users where username=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int res=rs.getInt(1);
+				if(res>0){
+					value=true;
+				}
+			}
+			System.out.println("findByUsername: "+value);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return value;
 	}
 }

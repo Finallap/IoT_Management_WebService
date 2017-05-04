@@ -2,6 +2,6 @@
 <endpoints version="2.0"
 	xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime">
 	<endpoint name="DaoPort"
-		implementation="com.njupt.ws_cxf_spring.dao.DaoDelegate"
+		implementation="com.njupt.dao.DaoDelegate"
 		url-pattern="/DaoPort">
 	</endpoint></endpoints>

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-@javax.jws.WebService(targetNamespace = "http://dao.ws_cxf_spring.njupt.com/", serviceName = "DaoService", portName = "DaoPort")
+@javax.jws.WebService(targetNamespace = "http://dao.njupt.com/", serviceName = "DaoService", portName = "DaoPort")
 public class DaoDelegate {
 
 	com.njupt.dao.Dao dao = new com.njupt.dao.Dao();
