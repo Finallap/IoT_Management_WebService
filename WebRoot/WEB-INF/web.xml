@@ -17,5 +17,6 @@
   </servlet>
   <servlet-mapping>
   	<servlet-name>DaoService</servlet-name>
-  	<url-pattern>/DaoPort</url-pattern>
-  </servlet-mapping></web-app>
+  	<url-pattern>/ServicePort</url-pattern>
+  </servlet-mapping>
+  </web-app>

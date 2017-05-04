@@ -1,7 +1,8 @@
 <?xml version = "1.0"?>
 <endpoints version="2.0"
 	xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime">
-	<endpoint name="DaoPort"
-		implementation="com.njupt.dao.DaoDelegate"
-		url-pattern="/DaoPort">
-	</endpoint></endpoints>
+	<endpoint name="ServicePort"
+		implementation="com.njupt.service.ServiceDelegate"
+		url-pattern="/ServicePort">
+	</endpoint>
+</endpoints>
