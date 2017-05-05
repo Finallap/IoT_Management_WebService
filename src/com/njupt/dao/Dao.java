@@ -135,7 +135,7 @@ public class Dao {
 				int flag = pstmt.executeUpdate();
 				if(flag==1){
 					System.out.println("userRegister: success");
-					return "{\"res\":\"success\"}";			
+					return "{\"status\":\"success\"}";			
 				}
 			}catch(Exception e){			
 				e.printStackTrace();
@@ -150,10 +150,10 @@ public class Dao {
 				}
 			}
 			System.out.println("userRegister: failed");
-			return "{\"res\":\"failed\"}";
+			return "{\"status\":\"failed\"}";
 		}else{
 			System.out.println("userRegister: 用户名已存在");
-			return "{\"res\":\"用户名已存在\"}";
+			return "{\"status\":\"User already exist\"}";
 		}
 	}
 	
@@ -170,6 +170,83 @@ public class Dao {
 			conn = ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int res=rs.getInt(1);
+				if(res>0){
+					value=true;
+				}
+			}
+			System.out.println("findByUsername: "+value);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return value;
+	}
+	
+	/**
+	 * 添加项目，传入userKey，返回項目projectKey
+	 * @param projectname
+	 * @param ownerapikey
+	 * @return
+	 */
+	public String addProject(int userid ,String projectname, String ownerapikey ,Boolean ispublic ,String projectkey) {
+		String projectKey=Tools.createUUID();
+		String sql = "INSERT INTO `project` (`ProjectID`, `UserID`, `ProjectName`, `isPublic`, `ProjectKey`, `CreateTime`) VALUES (NULL, ?, ?, ?, ?, ?)";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userid);
+			pstmt.setString(2, projectname);
+			pstmt.setBoolean(3, ispublic);
+			pstmt.setString(4, projectkey);
+			pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+			
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				System.out.println("addProject: "+projectKey);
+				return projectKey;			
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return projectKey;
+	}
+	
+	/**
+	 * 注册时用来判断用户名是否存在
+	 * @param username
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean findProjectByProjectID(String projectid){
+		boolean value=false;
+		String sql = "select count(*) from user where UserName=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, projectid);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				int res=rs.getInt(1);
