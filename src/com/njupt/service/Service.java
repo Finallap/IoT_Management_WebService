@@ -35,11 +35,13 @@ public class Service {
 	}
 	
 	public String addProject(int UserID ,String ProjectName ,Boolean isPublic ,String ProjectKey){
-		return "";
+		String value = db.addProject(UserID ,ProjectName,isPublic ,ProjectKey);
+		return value;
 	}
 	
 	public String deleteProject(int ProjectID){
-		return "";
+		String value = db.deleteProjecByProjectID(ProjectID);
+		return value;
 	}
 	
 	public String addControllingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){

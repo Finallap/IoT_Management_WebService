@@ -197,56 +197,18 @@ public class Dao {
 	}
 	
 	/**
-	 * 添加项目，传入userKey，返回項目projectKey
-	 * @param projectname
-	 * @param ownerapikey
-	 * @return
-	 */
-	public String addProject(int userid ,String projectname, String ownerapikey ,Boolean ispublic ,String projectkey) {
-		String projectKey=Tools.createUUID();
-		String sql = "INSERT INTO `project` (`ProjectID`, `UserID`, `ProjectName`, `isPublic`, `ProjectKey`, `CreateTime`) VALUES (NULL, ?, ?, ?, ?, ?)";
-		try {
-			conn = ds.getConnection();
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, userid);
-			pstmt.setString(2, projectname);
-			pstmt.setBoolean(3, ispublic);
-			pstmt.setString(4, projectkey);
-			pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-			
-			int flag = pstmt.executeUpdate();
-			if(flag==1){
-				System.out.println("addProject: "+projectKey);
-				return projectKey;			
-			}
-		}catch(Exception e){			
-			e.printStackTrace();
-		} finally {
-			try {
-				if (pstmt != null)
-					pstmt.close();
-				if (conn != null)
-					conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return projectKey;
-	}
-	
-	/**
 	 * 注册时用来判断用户名是否存在
 	 * @param username
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean findProjectByProjectID(String projectid){
+	public boolean findByUserID(int UserID){
 		boolean value=false;
-		String sql = "select count(*) from user where UserName=?";
+		String sql = "select count(*) from user where UserID=?";
 		try {
 			conn = ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, projectid);
+			pstmt.setInt(1, UserID);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				int res=rs.getInt(1);
@@ -254,7 +216,7 @@ public class Dao {
 					value=true;
 				}
 			}
-			System.out.println("findByUsername: "+value);
+			System.out.println("findByUserID: "+value);
 			return value;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -271,6 +233,113 @@ public class Dao {
 			}
 		}
 		return value;
+	}
+
+	public String addProject(int userid ,String projectname, Boolean ispublic ,String projectkey) {
+		boolean exist= findByUserID(userid);
+		if(exist){
+			String sql = "INSERT INTO `project` (`ProjectID`, `UserID`, `ProjectName`, `isPublic`, `ProjectKey`, `CreateTime`) VALUES (NULL, ?, ?, ?, ?, ?)";
+			try {
+				conn = ds.getConnection();
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, userid);
+				pstmt.setString(2, projectname);
+				pstmt.setBoolean(3, ispublic);
+				pstmt.setString(4, projectkey);
+				pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+				
+				int flag = pstmt.executeUpdate();
+				if(flag==1){
+					System.out.println("addProject: success");
+					return "{\"status\":\"success\"}";
+				}
+			}catch(Exception e){			
+				e.printStackTrace();
+			} finally {
+				try {
+					if (pstmt != null)
+						pstmt.close();
+					if (conn != null)
+						conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			System.out.println("addProject: failed");
+			return "{\"status\":\"failed\"}";
+		}else{
+			System.out.println("addProject: 用户不存在");
+			return "{\"status\":\"User not exist\"}";
+		}
+
+	}
+	
+	public boolean existProjectByProjectID(int ProjectID){
+		boolean value=false;
+		String sql = "select count(*) from project where ProjectID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ProjectID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int res=rs.getInt(1);
+				if(res>0){
+					value=true;
+				}
+			}
+			System.out.println("existProjectByProjectID: "+value);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return value;
+	}
+	
+	public String deleteProjecByProjectID(int ProjectID) {
+		boolean exist= existProjectByProjectID(ProjectID);
+		if(exist){
+			String sql = "update W_APP_GRANT set apply_state=? where appkey=?";
+			int flag=0;
+			try {
+				conn = ds.getConnection();
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, ProjectID);
+				flag = pstmt.executeUpdate();
+				if(flag==1){
+					System.out.println("deleteProjecByProjectID:"+flag);
+					return "{\"status\":\"success\"}";			
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}finally {
+				try{
+					if (pstmt != null)
+						pstmt.close();
+					if (conn != null)
+						conn.close();				
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			System.out.println("deleteProjecByProjectID: failed");
+			return "{\"status\":\"failed\"}";
+		}else{
+			System.out.println("deleteProjecByProjectID: 项目不存在");
+			return "{\"status\":\"Project not exist\"}";
+		}
+		
 	}
 	
 }
