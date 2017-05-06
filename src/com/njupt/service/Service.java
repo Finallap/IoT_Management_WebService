@@ -2,6 +2,9 @@ package com.njupt.service;
 
 import java.sql.Date;
 
+import net.sf.json.JSONObject;
+
+import com.njupt.bean.User;
 import com.njupt.dao.Dao;
 import com.njupt.tools.Tools;
 
@@ -34,6 +37,22 @@ public class Service {
 		return value;
 	}
 	
+	public String getUserByUserName(String username) {
+		boolean exist= db.findByUsername(username);
+		if(exist){
+			User user = db.getUserByUserName(username);
+			JSONObject userJsonObject = JSONObject.fromObject(user);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("User", userJsonObject);
+	        System.out.println("getUserByUserName: "+jsonObject.toString());
+			return jsonObject.toString();
+		}else{
+			System.out.println("getUserByUserName: 用户不存在");
+			return "{\"status\":\"User not exist\"}";
+		}
+	}
+	
 	public String addProject(int UserID ,String ProjectName ,Boolean isPublic ,String ProjectKey){
 		String value = db.addProject(UserID ,ProjectName,isPublic ,ProjectKey);
 		return value;
@@ -49,12 +68,42 @@ public class Service {
 		return value;
 	}
 	
+	public String countProject(int UserID){
+		boolean exist= db.findByUserID(UserID);
+		if(exist){
+			int value = db.countProject(UserID);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("ProjectNum", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("updateProject: 用户不存在");
+			return "{\"status\":\"Project not exist\"}";
+		}
+	}
+	
 	public String addControllingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
 		return "";
 	}
 	
 	public String deleteControllingDevice(int ControllingDeviceID){
 		return "";
+	}
+	
+	public String countUserControllingDevice(int UserID){
+		boolean exist= db.findByUserID(UserID);
+		if(exist){
+			int value = db.countUserControllingDevice(UserID);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("ControllingDeviceNum", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("updateProject: 用户不存在");
+			return "{\"status\":\"Project not exist\"}";
+		}
 	}
 	
 	public String addSensingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
@@ -65,23 +114,26 @@ public class Service {
 		return "";
 	}
 	
+	public String countUserSensingDevice(int UserID){
+		boolean exist= db.findByUserID(UserID);
+		if(exist){
+			int value = db.countUserSensingDevice(UserID);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("ControllingDeviceNum", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("updateProject: 用户不存在");
+			return "{\"status\":\"Project not exist\"}";
+		}
+	}
+	
 	public String addDataType(int SensingDeviceID ,String Type ,String Mark ,String Symbol){
 		return "";
 	}
 	
 	public String addConfigType(int ControllingDeviceID ,String ConfigTypeName ,String Mark){
-		return "";
-	}
-	
-	public String countProject(int UserID){
-		return "";
-	}
-	
-	public String countControllingDevice(int UserID){
-		return "";
-	}
-	
-	public String countSensingDevice(int UserID){
 		return "";
 	}
 	

@@ -12,10 +12,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.njupt.bean.User;
 import com.njupt.tools.Tools;
 
-//import net.sf.json.JSONArray;
 
 public class Dao {
 	
@@ -231,23 +234,20 @@ public class Dao {
 		return value;
 	}
 
-	//Î´²âÊÔ
-	public int getUserIDByUserName(String username){
-		int value = 0;
-		String sql = "SELECT `UserID` FROM `user` WHERE `UserName` = ?";
+	public User getUserByUserName(String username){
+		User user = null;
+		String sql = "SELECT * FROM `user` WHERE `UserName` = ?";
 		try {
 			conn = ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, username);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				int res=rs.getInt(1);
-				if(res>0){
-					value=res;
-				}
+				user = new User(rs.getInt(1),rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getTimestamp(5),rs.getBoolean(6));
 			}
-			System.out.println("getUserIDByUserName: "+value);
-			return value;
+			
+			return user;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -262,7 +262,7 @@ public class Dao {
 				e.printStackTrace();
 			}
 		}
-		return 0;
+		return null;
 	}
 	
 	public String addProject(int userid ,String projectname, Boolean ispublic ,String projectkey) {
@@ -408,5 +408,93 @@ public class Dao {
 		
 	}
 	
+	public int countProject(int userid){
+		int result = 0;
+		String sql = "select count(*) from project where UserID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userid);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result=rs.getInt(1);
+			}
+			System.out.println("countProject: "+result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 	
+	public int countUserControllingDevice(int userid){
+		int result = 0;
+		String sql = "select count(*) from controllingdevice where ProjectID in (select ProjectID from project where UserID = ?)";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userid);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result=rs.getInt(1);
+			}
+			System.out.println("countUserControllingDevice: "+result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public int countUserSensingDevice(int userid){
+		int result = 0;
+		String sql = "select count(*) from sensingdevice where ProjectID in (select ProjectID from project where UserID = ?)";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userid);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result=rs.getInt(1);
+			}
+			System.out.println("countProject: "+result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 }
