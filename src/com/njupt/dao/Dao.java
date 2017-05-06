@@ -19,7 +19,7 @@ import com.njupt.tools.Tools;
 
 public class Dao {
 	
-	private static final String url = "jdbc:mysql://localhost:3306/iot_management";
+	private static final String url = "jdbc:mysql://localhost:3306/iot_management?useUnicode=true&characterEncoding=UTF8";
 	private static final String user = "root";
 	private static final String userpass = "";
 	private static ComboPooledDataSource ds;
@@ -27,10 +27,6 @@ public class Dao {
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private static final String driver = "com.mysql.jdbc.Driver";
-	
-	public String sayHello(){
-		return "Hello World!";
-	}
 	
 	/**
      * 初始化连接池代码块,全局静态代码块
@@ -235,6 +231,40 @@ public class Dao {
 		return value;
 	}
 
+	//未测试
+	public int getUserIDByUserName(String username){
+		int value = 0;
+		String sql = "SELECT `UserID` FROM `user` WHERE `UserName` = ?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, username);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int res=rs.getInt(1);
+				if(res>0){
+					value=res;
+				}
+			}
+			System.out.println("getUserIDByUserName: "+value);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+	
 	public String addProject(int userid ,String projectname, Boolean ispublic ,String projectkey) {
 		boolean exist= findByUserID(userid);
 		if(exist){
@@ -274,6 +304,42 @@ public class Dao {
 
 	}
 	
+	public String updateProject(int ProjectID ,String ProjectName ,Boolean isPublic){
+		boolean exist= existProjectByProjectID(ProjectID);
+		if(exist){
+			String sql = "UPDATE `project` SET `ProjectName` = ? , `isPublic` = ? WHERE `ProjectID` = ?;";
+			int flag=0;
+			try {
+				conn = ds.getConnection();
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, ProjectName);
+				pstmt.setBoolean(2, isPublic);
+				pstmt.setInt(3, ProjectID);
+				flag = pstmt.executeUpdate();
+				if(flag==1){
+					System.out.println("updateProject:"+flag);
+					return "{\"status\":\"success\"}";			
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}finally {
+				try{
+					if (pstmt != null)
+						pstmt.close();
+					if (conn != null)
+						conn.close();				
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			System.out.println("updateProject: failed");
+			return "{\"status\":\"failed\"}";
+		}else{
+			System.out.println("updateProject: 项目不存在");
+			return "{\"status\":\"Project not exist\"}";
+		}
+	}
+	
 	public boolean existProjectByProjectID(int ProjectID){
 		boolean value=false;
 		String sql = "select count(*) from project where ProjectID=?";
@@ -310,7 +376,7 @@ public class Dao {
 	public String deleteProjecByProjectID(int ProjectID) {
 		boolean exist= existProjectByProjectID(ProjectID);
 		if(exist){
-			String sql = "update W_APP_GRANT set apply_state=? where appkey=?";
+			String sql = "DELETE FROM `project` WHERE `ProjectID` = ?";
 			int flag=0;
 			try {
 				conn = ds.getConnection();
@@ -341,5 +407,6 @@ public class Dao {
 		}
 		
 	}
+	
 	
 }

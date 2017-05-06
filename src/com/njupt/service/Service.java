@@ -39,6 +39,11 @@ public class Service {
 		return value;
 	}
 	
+	public String updateProject(int ProjectID ,String ProjectName ,Boolean isPublic){
+		String value = db.updateProject(ProjectID ,ProjectName,isPublic);
+		return value;
+	}
+	
 	public String deleteProject(int ProjectID){
 		String value = db.deleteProjecByProjectID(ProjectID);
 		return value;
@@ -88,11 +93,11 @@ public class Service {
 		return "";
 	}
 	
-	public String getDataLog(int DataTypeID ,Date start_date ,Date end_date ,int limite ,int offset){
-		return "";
-	}
-	
-	public String getConfigLog(int ControllingDeviceID ,Date start_date ,Date end_date ,int limite ,int offset){
-		return "";
-	}
+//	public String getDataLog(int DataTypeID ,Date start_date ,Date end_date ,int limite ,int offset){
+//		return "";
+//	}
+//	
+//	public String getConfigLog(int ControllingDeviceID ,Date start_date ,Date end_date ,int limite ,int offset){
+//		return "";
+//	}
 }

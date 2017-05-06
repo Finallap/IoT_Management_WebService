@@ -21,9 +21,21 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testAddProject(){
-		String result = se.addProject(5,"ssssss" ,false ,"dsfsdafsdafdsafasdfgdgfg");
+		String result = se.addProject(1,"dfsfsdf" ,false ,"dsfsdafsdafdsafasdfgdgfg");
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testDeleteProject(){
+		String result = se.deleteProject(2);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testUpdateProject(){
+		String result = se.updateProject(1,"·½Ô«Èò",true);
 		System.out.println(result);
 	}
 }
