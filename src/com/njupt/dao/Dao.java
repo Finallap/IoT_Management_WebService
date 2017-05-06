@@ -265,43 +265,34 @@ public class Dao {
 		return null;
 	}
 	
-	public String addProject(int userid ,String projectname, Boolean ispublic ,String projectkey) {
-		boolean exist= findByUserID(userid);
-		if(exist){
-			String sql = "INSERT INTO `project` (`ProjectID`, `UserID`, `ProjectName`, `isPublic`, `ProjectKey`, `CreateTime`) VALUES (NULL, ?, ?, ?, ?, ?)";
-			try {
-				conn = ds.getConnection();
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, userid);
-				pstmt.setString(2, projectname);
-				pstmt.setBoolean(3, ispublic);
-				pstmt.setString(4, projectkey);
-				pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+	public Boolean addProject(int userid ,String projectname, Boolean ispublic ,String projectkey) {
+		String sql = "INSERT INTO `project` (`ProjectID`, `UserID`, `ProjectName`, `isPublic`, `ProjectKey`, `CreateTime`) VALUES (NULL, ?, ?, ?, ?, ?)";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userid);
+			pstmt.setString(2, projectname);
+			pstmt.setBoolean(3, ispublic);
+			pstmt.setString(4, projectkey);
+			pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 				
-				int flag = pstmt.executeUpdate();
-				if(flag==1){
-					System.out.println("addProject: success");
-					return "{\"status\":\"success\"}";
-				}
-			}catch(Exception e){			
-				e.printStackTrace();
-			} finally {
-				try {
-					if (pstmt != null)
-						pstmt.close();
-					if (conn != null)
-						conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
 			}
-			System.out.println("addProject: failed");
-			return "{\"status\":\"failed\"}";
-		}else{
-			System.out.println("addProject: 用户不存在");
-			return "{\"status\":\"User not exist\"}";
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-
+		return false;
 	}
 	
 	public String updateProject(int ProjectID ,String ProjectName ,Boolean isPublic){
@@ -340,6 +331,7 @@ public class Dao {
 		}
 	}
 	
+	
 	public boolean existProjectByProjectID(int ProjectID){
 		boolean value=false;
 		String sql = "select count(*) from project where ProjectID=?";
@@ -373,40 +365,33 @@ public class Dao {
 		return value;
 	}
 	
-	public String deleteProjecByProjectID(int ProjectID) {
-		boolean exist= existProjectByProjectID(ProjectID);
-		if(exist){
-			String sql = "DELETE FROM `project` WHERE `ProjectID` = ?";
-			int flag=0;
-			try {
-				conn = ds.getConnection();
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, ProjectID);
-				flag = pstmt.executeUpdate();
-				if(flag==1){
-					System.out.println("deleteProjecByProjectID:"+flag);
-					return "{\"status\":\"success\"}";			
-				}
-			} catch(Exception e){
-				e.printStackTrace();
-			}finally {
-				try{
-					if (pstmt != null)
-						pstmt.close();
-					if (conn != null)
-						conn.close();				
-				}catch(Exception e){
-					e.printStackTrace();
-				}
+	
+	public Boolean deleteProjecByProjectID(int ProjectID) {
+		String sql = "DELETE FROM `project` WHERE `ProjectID` = ?";
+		int flag=0;
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ProjectID);
+			flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;			
 			}
-			System.out.println("deleteProjecByProjectID: failed");
-			return "{\"status\":\"failed\"}";
-		}else{
-			System.out.println("deleteProjecByProjectID: 项目不存在");
-			return "{\"status\":\"Project not exist\"}";
+		} catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			try{
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
-		
+		return false;
 	}
+	
 	
 	public int countProject(int userid){
 		int result = 0;
@@ -438,6 +423,99 @@ public class Dao {
 		return result;
 	}
 	
+	
+	public Boolean addControllingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
+		String sql = "INSERT INTO `controllingdevice` (`ProjectID`, `DeviceName`, `Mac`, `Protocol`, `Description`, `Localtion`, `DeviceKey`, `CreateTime`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ProjectID);
+			pstmt.setString(2, DeviceName);
+			pstmt.setString(3, Mac);
+			pstmt.setString(4, Protocol);
+			pstmt.setString(5, Description);
+			pstmt.setString(6, Localtion);
+			pstmt.setString(7, DeviceKey);
+			pstmt.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public boolean existControllingDeviceByDeviceID(int ControllingDeviceID){
+		boolean value=false;
+		String sql = "select count(*) from controllingdevice where ControllingDeviceID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ControllingDeviceID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int res=rs.getInt(1);
+				if(res>0){
+					value=true;
+				}
+			}
+			System.out.println("existControllingDeviceByDeviceID: "+value);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return value;
+	}
+	
+	public Boolean deleteControllingDeviceByDeviceID(int ControllingDeviceID) {
+		String sql = "DELETE FROM `controllingdevice` WHERE `ControllingDeviceID` = ?";
+		int flag=0;
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ControllingDeviceID);
+			flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;			
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			try{
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
 	public int countUserControllingDevice(int userid){
 		int result = 0;
 		String sql = "select count(*) from controllingdevice where ProjectID in (select ProjectID from project where UserID = ?)";
@@ -466,6 +544,99 @@ public class Dao {
 			}
 		}
 		return result;
+	}
+	
+
+	public Boolean addSensingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
+		String sql = "INSERT INTO `sensingdevice` (`ProjectID`, `DeviceName`, `Mac`, `Protocol`, `Description`, `Localtion`, `DeviceKey`, `CreateTime`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ProjectID);
+			pstmt.setString(2, DeviceName);
+			pstmt.setString(3, Mac);
+			pstmt.setString(4, Protocol);
+			pstmt.setString(5, Description);
+			pstmt.setString(6, Localtion);
+			pstmt.setString(7, DeviceKey);
+			pstmt.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public boolean existSensingDeviceByDeviceID(int SensingDeviceID){
+		boolean value=false;
+		String sql = "select count(*) from sensingdevice where SensingDeviceID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, SensingDeviceID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int res=rs.getInt(1);
+				if(res>0){
+					value=true;
+				}
+			}
+			System.out.println("existSensingDeviceByDeviceID: "+value);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return value;
+	}
+	
+	public Boolean deleteSensingDeviceByDeviceID(int SensingDeviceID) {
+		String sql = "DELETE FROM `sensingdevice` WHERE `SensingDeviceID` = ?";
+		int flag=0;
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, SensingDeviceID);
+			flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;			
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			try{
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 	
 	public int countUserSensingDevice(int userid){

@@ -29,13 +29,13 @@ public class TestService {
 	
 	@Ignore
 	public void testAddProject(){
-		String result = se.addProject(1,"dfsfsdf" ,false ,"dsfsdafsdafdsafasdfgdgfg");
+		String result = se.addProject(1,"ÄÏÓÊ2" ,false ,"dsfsdafsdafdsafasdfgdgfg");
 		System.out.println(result);
 	}
 	
 	@Ignore
 	public void testDeleteProject(){
-		String result = se.deleteProject(2);
+		String result = se.deleteProject(4);
 		System.out.println(result);
 	}
 	
@@ -57,9 +57,33 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testCountUserSensingDevice(){
 		String result = se.countUserSensingDevice(1);
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testAddControllingDevice(){
+		String result = se.addControllingDevice(3 ,"²âÊÔ¿ØÖÆÆ÷" ,"df-sd-sd-f-df-df-sd" ,"HTTP" ,"Ò»¶ÎÎÄ×ÖÃèÊö" ,"ÈıÅÆÂ¥","dfdsfsafdsafdsagfgdgfd");
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testAddSensingDevice(){
+		String result = se.addSensingDevice(3 ,"²âÊÔ´«¸ĞÆ÷" ,"df-sd-sd-f-df-df-sd" ,"HTTP" ,"Ò»¶ÎÎÄ×ÖÃèÊö" ,"ÈıÅÆÂ¥","dfdsfsafdsafdsagfgdgfd");
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testDeleteControllingDevice(){
+		String result = se.deleteControllingDevice(4);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testDeleteSensingDevice(){
+		String result = se.deleteSensingDevice(4);
 		System.out.println(result);
 	}
 }

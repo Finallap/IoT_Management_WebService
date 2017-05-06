@@ -54,8 +54,20 @@ public class Service {
 	}
 	
 	public String addProject(int UserID ,String ProjectName ,Boolean isPublic ,String ProjectKey){
-		String value = db.addProject(UserID ,ProjectName,isPublic ,ProjectKey);
-		return value;
+		boolean exist= db.findByUserID(UserID);
+		if(exist){
+			boolean flag = db.addProject(UserID ,ProjectName,isPublic ,ProjectKey);
+			if(flag==true){
+				System.out.println("addProject: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("addProject: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("addProject: 用户不存在");
+			return "{\"status\":\"User not exist\"}";
+		}
 	}
 	
 	public String updateProject(int ProjectID ,String ProjectName ,Boolean isPublic){
@@ -64,8 +76,20 @@ public class Service {
 	}
 	
 	public String deleteProject(int ProjectID){
-		String value = db.deleteProjecByProjectID(ProjectID);
-		return value;
+		boolean exist= db.existProjectByProjectID(ProjectID);
+		if(exist){
+			boolean flag = db.deleteProjecByProjectID(ProjectID);
+			if(flag==true){
+				System.out.println("deleteProjecByProjectID: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("deleteProjecByProjectID: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("deleteProjecByProjectID: 项目不存在");
+			return "{\"status\":\"Project not exist\"}";
+		}
 	}
 	
 	public String countProject(int UserID){
@@ -78,17 +102,44 @@ public class Service {
 			
 			return jsonObject.toString();
 		}else{
-			System.out.println("updateProject: 用户不存在");
+			System.out.println("countProject: 用户不存在");
 			return "{\"status\":\"Project not exist\"}";
 		}
 	}
 	
 	public String addControllingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
-		return "";
+		boolean exist= db.existProjectByProjectID(ProjectID);
+		if(exist){
+			boolean flag = db.addControllingDevice(ProjectID ,DeviceName ,Mac ,Protocol ,Description ,Localtion,DeviceKey);
+			
+			if(flag==true){
+				System.out.println("addControllingDevice: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("addControllingDevice: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("addControllingDevice: 项目不存在");
+			return "{\"status\":\"Project not exist\"}";
+		}
 	}
 	
 	public String deleteControllingDevice(int ControllingDeviceID){
-		return "";
+		boolean exist= db.existControllingDeviceByDeviceID(ControllingDeviceID);
+		if(exist){
+			boolean flag = db.deleteControllingDeviceByDeviceID(ControllingDeviceID);
+			if(flag==true){
+				System.out.println("deleteControllingDevice: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("deleteControllingDevice: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("deleteControllingDevice: 控制设备不存在");
+			return "{\"status\":\"ControllingDevice not exist\"}";
+		}
 	}
 	
 	public String countUserControllingDevice(int UserID){
@@ -99,6 +150,7 @@ public class Service {
 			jsonObject.put("status", "success");
 			jsonObject.put("ControllingDeviceNum", value);
 			
+			System.out.println("updateProject: "+jsonObject.toString());
 			return jsonObject.toString();
 		}else{
 			System.out.println("updateProject: 用户不存在");
@@ -107,11 +159,38 @@ public class Service {
 	}
 	
 	public String addSensingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
-		return "";
+		boolean exist= db.existProjectByProjectID(ProjectID);
+		if(exist){
+			boolean flag = db.addSensingDevice(ProjectID ,DeviceName ,Mac ,Protocol ,Description ,Localtion,DeviceKey);
+			
+			if(flag==true){
+				System.out.println("addSensingDevice: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("addSensingDevice: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("addSensingDevice: 项目不存在");
+			return "{\"status\":\"Project not exist\"}";
+		}
 	}
 	
 	public String deleteSensingDevice(int SensingDeviceID){
-		return "";
+		boolean exist= db.existSensingDeviceByDeviceID(SensingDeviceID);
+		if(exist){
+			boolean flag = db.deleteSensingDeviceByDeviceID(SensingDeviceID);
+			if(flag==true){
+				System.out.println("deleteSensingDevice: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("deleteSensingDevice: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("deleteSensingDevice: 控制设备不存在");
+			return "{\"status\":\"SensingDevice not exist\"}";
+		}
 	}
 	
 	public String countUserSensingDevice(int UserID){
