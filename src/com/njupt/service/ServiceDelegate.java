@@ -1,7 +1,11 @@
 package com.njupt.service;
 
 import java.sql.Date;
+import java.util.List;
 import net.sf.json.JSONObject;
+import com.njupt.bean.Controllingdevice;
+import com.njupt.bean.Project;
+import com.njupt.bean.Sensingdevice;
 import com.njupt.bean.User;
 import com.njupt.dao.Dao;
 import com.njupt.tools.Tools;
@@ -41,6 +45,10 @@ public class ServiceDelegate {
 		return service.countProject(UserID);
 	}
 
+	public String queryProject(int UserID, int count, int offset) {
+		return service.queryProject(UserID, count, offset);
+	}
+
 	public String addControllingDevice(int ProjectID, String DeviceName,
 			String Mac, String Protocol, String Description, String Localtion,
 			String DeviceKey) {
@@ -54,6 +62,10 @@ public class ServiceDelegate {
 
 	public String countUserControllingDevice(int UserID) {
 		return service.countUserControllingDevice(UserID);
+	}
+
+	public String queryUserControllingDevice(int UserID, int count, int offset) {
+		return service.queryUserControllingDevice(UserID, count, offset);
 	}
 
 	public String addSensingDevice(int ProjectID, String DeviceName,
@@ -71,9 +83,21 @@ public class ServiceDelegate {
 		return service.countUserSensingDevice(UserID);
 	}
 
+	public String queryUserSensingDevice(int UserID, int count, int offset) {
+		return service.queryUserSensingDevice(UserID, count, offset);
+	}
+
 	public String addDataType(int SensingDeviceID, String Type, String Mark,
 			String Symbol) {
 		return service.addDataType(SensingDeviceID, Type, Mark, Symbol);
+	}
+
+	public String deleteDataType(int DataTypeID) {
+		return service.deleteDataType(DataTypeID);
+	}
+
+	public String countDataType(int SensingDeviceID) {
+		return service.countDataType(SensingDeviceID);
 	}
 
 	public String addConfigType(int ControllingDeviceID, String ConfigTypeName,
@@ -81,8 +105,8 @@ public class ServiceDelegate {
 		return service.addConfigType(ControllingDeviceID, ConfigTypeName, Mark);
 	}
 
-	public String countDataType(int SensingDeviceID) {
-		return service.countDataType(SensingDeviceID);
+	public String deleteConfigType(int ConfigTypeID) {
+		return service.deleteConfigType(ConfigTypeID);
 	}
 
 	public String countConfigType(int ControllingDeviceID) {

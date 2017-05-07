@@ -5,6 +5,9 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 
+import com.njupt.bean.Controllingdevice;
+import com.njupt.bean.Project;
+import com.njupt.bean.Sensingdevice;
 import com.njupt.bean.User;
 import com.njupt.dao.Dao;
 import com.njupt.tools.Tools;
@@ -107,7 +110,7 @@ public class Service {
 	public String queryProject(int UserID, int count , int offset){
 		boolean exist= db.findByUserID(UserID);
 		if(exist){
-			List value = db.queryProject(UserID,count,offset);
+			List<Project> value = db.queryProject(UserID,count,offset);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status", "success");
 			jsonObject.put("ProjectList", value);
@@ -170,6 +173,21 @@ public class Service {
 		}
 	}
 	
+	public String queryUserControllingDevice(int UserID, int count , int offset){
+		boolean exist= db.findByUserID(UserID);
+		if(exist){
+			List<Controllingdevice> value = db.queryUserControllingDevice(UserID,count,offset);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("ControllingDeviceList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("countProject: 用户不存在");
+			return "{\"status\":\"User not exist\"}";
+		}
+	}
+	
 	public String addSensingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
 		boolean exist= db.existProjectByProjectID(ProjectID);
 		if(exist){
@@ -220,11 +238,26 @@ public class Service {
 		}
 	}
 	
+	public String queryUserSensingDevice(int UserID, int count , int offset){
+		boolean exist= db.findByUserID(UserID);
+		if(exist){
+			List<Sensingdevice> value = db.queryUserSensingDevice(UserID,count,offset);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("SensingDeviceList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("countProject: 用户不存在");
+			return "{\"status\":\"User not exist\"}";
+		}
+	}
+	
 	public String addDataType(int SensingDeviceID ,String Type ,String Mark ,String Symbol){
 		return "";
 	}
 	
-	public String addConfigType(int ControllingDeviceID ,String ConfigTypeName ,String Mark){
+	public String deleteDataType(int DataTypeID){
 		return "";
 	}
 	
@@ -232,6 +265,14 @@ public class Service {
 		return "";
 	}
 	
+	public String addConfigType(int ControllingDeviceID ,String ConfigTypeName ,String Mark){
+		return "";
+	}
+	
+	public String deleteConfigType(int ConfigTypeID){
+		return "";
+	}
+
 	public String countConfigType(int ControllingDeviceID){
 		return "";
 	}

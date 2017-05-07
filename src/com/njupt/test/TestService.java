@@ -106,9 +106,21 @@ public class TestService {
 		}	
 	}
 	
-	@Test
+	@Ignore
 	public void testqueryProject(){
 		String result = se.queryProject(1,-1,0);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testqueryUserControllingDevice(){
+		String result = se.queryUserControllingDevice(1,-1,0);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testqueryUserSensingDevice(){
+		String result = se.queryUserSensingDevice(1,-1,0);
 		System.out.println(result);
 	}
 }
