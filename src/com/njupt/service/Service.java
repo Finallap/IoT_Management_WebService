@@ -1,6 +1,7 @@
 package com.njupt.service;
 
 import java.sql.Date;
+import java.util.List;
 
 import net.sf.json.JSONObject;
 
@@ -17,10 +18,6 @@ public class Service {
 		db = new Dao();
 	}
 	
-	/*
-	 * 判断用户是否合法
-	 * 
-	 */
 	public String getPermission(String username, String passwords){
 		int a = db.islegalUser(username, passwords);
 		System.out.println("用户id:"+a);
@@ -103,7 +100,22 @@ public class Service {
 			return jsonObject.toString();
 		}else{
 			System.out.println("countProject: 用户不存在");
-			return "{\"status\":\"Project not exist\"}";
+			return "{\"status\":\"User not exist\"}";
+		}
+	}
+	
+	public String queryProject(int UserID, int count , int offset){
+		boolean exist= db.findByUserID(UserID);
+		if(exist){
+			List value = db.queryProject(UserID,count,offset);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("ProjectList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("countProject: 用户不存在");
+			return "{\"status\":\"User not exist\"}";
 		}
 	}
 	

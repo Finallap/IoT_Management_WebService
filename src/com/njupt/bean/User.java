@@ -17,7 +17,7 @@ public class User {
 	private String userName;
 	private String email;
 	private String password;
-	private Timestamp registerTime;
+	private String registerTime;
 	private Boolean isAdmin;
 
 	// Constructors
@@ -28,7 +28,7 @@ public class User {
 
 	/** full constructor */
 	public User(int userId,String userName, String email, String password,
-			Timestamp registerTime, Boolean isAdmin) {
+			String registerTime, Boolean isAdmin) {
 		this.userId = userId;
 		this.userName = userName;
 		this.email = email;
@@ -71,11 +71,11 @@ public class User {
 		this.password = password;
 	}
 
-	public Timestamp getRegisterTime() {
+	public String getRegisterTime() {
 		return this.registerTime;
 	}
 
-	public void setRegisterTime(Timestamp registerTime) {
+	public void setRegisterTime(String registerTime) {
 		this.registerTime = registerTime;
 	}
 

@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.njupt.bean.Project;
 import com.njupt.bean.User;
 import com.njupt.tools.Tools;
 
@@ -243,8 +246,17 @@ public class Dao {
 			pstmt.setString(1, username);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(5));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				
 				user = new User(rs.getInt(1),rs.getString(2), rs.getString(3), rs.getString(4),
-						rs.getTimestamp(5),rs.getBoolean(6));
+						createTime,rs.getBoolean(6));
 			}
 			
 			return user;
@@ -393,13 +405,13 @@ public class Dao {
 	}
 	
 	
-	public int countProject(int userid){
+	public int countProject(int userID){
 		int result = 0;
 		String sql = "select count(*) from project where UserID=?";
 		try {
 			conn = ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, userid);
+			pstmt.setInt(1, userID);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				result=rs.getInt(1);
@@ -423,6 +435,130 @@ public class Dao {
 		return result;
 	}
 	
+	public List queryProject(int userID , int count , int offset) {
+		// TODO Auto-generated method stub
+		List<Project> projectList = new ArrayList<Project>(); 
+		Project project;
+		
+		String sql = "select * from project where UserID=?";
+		if(count>0)
+			sql = sql + " limit ?,?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userID);
+			if(count>0)
+			{
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, count);
+			}
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				project = new Project();
+				project.setProjectId(rs.getInt(1));
+				project.setUserID(userID);
+				project.setProjectName(rs.getString(3));
+				project.setIsPublic(rs.getBoolean(4));
+				project.setProjectKey(rs.getString(5));
+				project.setControllingDeviceNum(countProjectControllingDeviceID(rs.getInt(1)));
+				project.setSensingDeviceNum(countProjectSensingDevices(rs.getInt(1)));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(6));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				project.setCreateTime(createTime);
+				
+				projectList.add(project);
+			}
+			System.out.println("queryProject: "+projectList.toString());
+			return projectList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return projectList;
+	}
+	
+	public int countProjectSensingDevices(int ProjectID){
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = "select count(*) from sensingdevice where ProjectID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ProjectID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result=rs.getInt(1);
+			}
+			System.out.println("countProjectSensingDevices: "+result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public int countProjectControllingDeviceID(int ProjectID){
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = "select count(*) from controllingdevice where ProjectID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ProjectID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result=rs.getInt(1);
+			}
+			System.out.println("countProjectControllingDeviceID: "+result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 	
 	public Boolean addControllingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
 		String sql = "INSERT INTO `controllingdevice` (`ProjectID`, `DeviceName`, `Mac`, `Protocol`, `Description`, `Localtion`, `DeviceKey`, `CreateTime`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -668,4 +804,6 @@ public class Dao {
 		}
 		return result;
 	}
+
+
 }

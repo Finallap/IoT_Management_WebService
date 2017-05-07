@@ -1,5 +1,8 @@
 package com.njupt.test;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -75,15 +78,37 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testDeleteControllingDevice(){
 		String result = se.deleteControllingDevice(4);
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testDeleteSensingDevice(){
 		String result = se.deleteSensingDevice(4);
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testJsonAnalysis(){
+		String result = se.getUserByUserName("·½Ô«Èò");
+//		System.out.println(result);
+		
+		JSONObject jsonObject =JSONObject.fromObject(result);
+//		JSONArray jsonArray = jsonObject.getJSONArray("user");
+//		JSONObject jsonPersons=jsonObject.getJSONObject("status");
+		
+		if(jsonObject.getString("status").equals("success")){
+			JSONObject userJsonObject = (JSONObject) jsonObject.get("User");
+			int userId = userJsonObject.getInt("userId");
+			System.out.println(userId);
+		}	
+	}
+	
+	@Test
+	public void testqueryProject(){
+		String result = se.queryProject(1,-1,0);
 		System.out.println(result);
 	}
 }
