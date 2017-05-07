@@ -113,6 +113,7 @@ public class Service {
 			List<Project> value = db.queryProject(UserID,count,offset);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status", "success");
+			jsonObject.put("count",  db.countProject(UserID));
 			jsonObject.put("ProjectList", value);
 			
 			return jsonObject.toString();
@@ -179,6 +180,7 @@ public class Service {
 			List<Controllingdevice> value = db.queryUserControllingDevice(UserID,count,offset);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status", "success");
+			jsonObject.put("count",  db.countUserControllingDevice(UserID));
 			jsonObject.put("ControllingDeviceList", value);
 			
 			return jsonObject.toString();
@@ -244,6 +246,7 @@ public class Service {
 			List<Sensingdevice> value = db.queryUserSensingDevice(UserID,count,offset);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status", "success");
+			jsonObject.put("count",  db.countUserSensingDevice(UserID));
 			jsonObject.put("SensingDeviceList", value);
 			
 			return jsonObject.toString();
