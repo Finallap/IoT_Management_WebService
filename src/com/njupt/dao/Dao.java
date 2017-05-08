@@ -689,7 +689,7 @@ public class Dao {
 		List<Controllingdevice> controllingDeviceList = new ArrayList<Controllingdevice>(); 
 		Controllingdevice controllingdevice;
 		
-		String sql = "select * from controllingdevice where ProjectID in (select ProjectID from project where UserID = ?)";
+		String sql = "select controllingdevice.*,project.`ProjectName` from controllingdevice,project where (controllingdevice.ProjectID in (select project.ProjectID from project where project.UserID = ?)) AND controllingdevice.`ProjectID` = project.`ProjectID` ";
 		if(count>0)
 			sql = sql + " limit ?,?";
 		try {
@@ -712,6 +712,7 @@ public class Dao {
 				controllingdevice.setDescription(rs.getString(6));
 				controllingdevice.setLocaltion(rs.getString(7));
 				controllingdevice.setDeviceKey(rs.getString(8));
+				controllingdevice.setProjectName(rs.getString(10));
 				
 				//将创建时间转换为String
 				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -871,7 +872,7 @@ public class Dao {
 		List<Sensingdevice> sensingDeviceList = new ArrayList<Sensingdevice>(); 
 		Sensingdevice sensingdevice;
 		
-		String sql = "select * from sensingdevice where ProjectID in (select ProjectID from project where UserID = ?)";
+		String sql = "select sensingdevice.*,project.`ProjectName` from sensingdevice,project where (sensingdevice.ProjectID in (select project.ProjectID from project where project.UserID = ?)) AND sensingdevice.`ProjectID` = project.`ProjectID`";
 		if(count>0)
 			sql = sql + " limit ?,?";
 		try {
@@ -894,6 +895,7 @@ public class Dao {
 				sensingdevice.setDescription(rs.getString(6));
 				sensingdevice.setLocaltion(rs.getString(7));
 				sensingdevice.setDeviceKey(rs.getString(8));
+				sensingdevice.setProjectName(rs.getString(10));
 				
 				//将创建时间转换为String
 				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
