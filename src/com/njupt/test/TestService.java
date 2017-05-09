@@ -142,15 +142,27 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testUpdateControllingDevice(){
 		String result = se.updateControllingDevice(2 ,"¿ØÖÆÆ÷11111" ,"aa-bb-cc-dd-ee-ff-gg" ,"TCP" ,"ÃèÊöÃèÊöÃèÊöÃèÊöÃèÊö" ,"ÏÉÁÖ" ,"fdfdsfsdhthjkiuyewiyruhfnjkndsmf");
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testUpdateSensingDevice(){
 		String result = se.updateSensingDevice(3 ,"´«¸ĞÆ÷222" ,"aa-bb-cc-dd-ee-ff-gg" ,"TCP" ,"ÃèÊöÃèÊöÃèÊöÃèÊöÃèÊö" ,"ÏÉÁÖ" ,"fdfdsfsdhthjkiuyewiyruhfnjkndsmf");
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testGetControllingDeviceListByProjectID(){
+		String result = se.getControllingDeviceListByProjectID(3);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testGetSensingDeviceListByProjectID(){
+		String result = se.getSensingDeviceListByProjectID(3);
 		System.out.println(result);
 	}
 }

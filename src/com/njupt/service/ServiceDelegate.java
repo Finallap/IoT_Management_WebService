@@ -83,6 +83,10 @@ public class ServiceDelegate {
 		return service.getControllingDeviceByDeviceID(DeviceID);
 	}
 
+	public String getControllingDeviceListByProjectID(int ProjectID) {
+		return service.getControllingDeviceListByProjectID(ProjectID);
+	}
+
 	public String addSensingDevice(int ProjectID, String DeviceName,
 			String Mac, String Protocol, String Description, String Localtion,
 			String DeviceKey) {
@@ -111,6 +115,10 @@ public class ServiceDelegate {
 
 	public String getSensingDeviceByDeviceID(int DeviceID) {
 		return service.getSensingDeviceByDeviceID(DeviceID);
+	}
+
+	public String getSensingDeviceListByProjectID(int ProjectID) {
+		return service.getSensingDeviceListByProjectID(ProjectID);
 	}
 
 	public String addDataType(int SensingDeviceID, String Type, String Mark,

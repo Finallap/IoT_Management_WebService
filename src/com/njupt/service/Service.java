@@ -239,6 +239,21 @@ public class Service {
 		}
 	}
 	
+	public String getControllingDeviceListByProjectID(int ProjectID){
+		boolean exist= db.existProjectByProjectID(ProjectID);
+		if(exist){
+			List<Controllingdevice> value = db.getControllingDeviceListByProjectID(ProjectID);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("ControllingDeviceList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("getControllingDeviceListByProjectID: 项目不存在");
+			return "{\"status\":\"Project not exist\"}";
+		}
+	}
+	
 	public String addSensingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
 		boolean exist= db.existProjectByProjectID(ProjectID);
 		if(exist){
@@ -335,6 +350,21 @@ public class Service {
 		}else{
 			System.out.println("getSensingDeviceByDeviceID: 控制设备不存在");
 			return "{\"status\":\"SensingDevice not exist\"}";
+		}
+	}
+	
+	public String getSensingDeviceListByProjectID(int ProjectID){
+		boolean exist= db.existProjectByProjectID(ProjectID);
+		if(exist){
+			List<Sensingdevice> value = db.getSensingDeviceListByProjectID(ProjectID);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("SensingDeviceList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("getSensingDeviceListByProjectID: 项目不存在");
+			return "{\"status\":\"Project not exist\"}";
 		}
 	}
 	

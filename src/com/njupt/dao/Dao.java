@@ -873,6 +873,63 @@ public class Dao {
 		}
 		return null;
 	}
+	
+	public List<Controllingdevice> getControllingDeviceListByProjectID(int ProjectID) {
+		// TODO Auto-generated method stub
+		List<Controllingdevice> controllingDeviceList = new ArrayList<Controllingdevice>(); 
+		Controllingdevice controllingdevice;
+		
+		String sql = "select controllingdevice.*,project.`ProjectName` from controllingdevice,project where controllingdevice.ProjectID = ? AND controllingdevice.`ProjectID` = project.`ProjectID` ";
+
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ProjectID);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				controllingdevice = new Controllingdevice();
+				controllingdevice.setControllingDeviceId(rs.getInt(1));
+				controllingdevice.setProjectID(rs.getInt(2));
+				controllingdevice.setDeviceName(rs.getString(3));
+				controllingdevice.setMac(rs.getString(4));
+				controllingdevice.setProtocol(rs.getString(5));
+				controllingdevice.setDescription(rs.getString(6));
+				controllingdevice.setLocaltion(rs.getString(7));
+				controllingdevice.setDeviceKey(rs.getString(8));
+				controllingdevice.setProjectName(rs.getString(10));
+				controllingdevice.setTypeCount(countDeviceConfigType(rs.getInt(1)));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(9));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				controllingdevice.setCreateTime(createTime);
+				
+				controllingDeviceList.add(controllingdevice);
+			}
+
+			return controllingDeviceList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return controllingDeviceList;
+	}
 
 	public Boolean addSensingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
 		String sql = "INSERT INTO `sensingdevice` (`ProjectID`, `DeviceName`, `Mac`, `Protocol`, `Description`, `Localtion`, `DeviceKey`, `CreateTime`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -1138,6 +1195,63 @@ public class Dao {
 			}
 		}
 		return null;
+	}
+	
+	public List<Sensingdevice> getSensingDeviceListByProjectID(int ProjectID){
+		// TODO Auto-generated method stub
+		List<Sensingdevice> sensingDeviceList = new ArrayList<Sensingdevice>(); 
+		Sensingdevice sensingdevice;
+		
+		String sql = "select sensingdevice.*,project.`ProjectName` from sensingdevice,project where sensingdevice.ProjectID = ? AND sensingdevice.`ProjectID` = project.`ProjectID`";
+
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ProjectID);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				sensingdevice = new Sensingdevice();
+				sensingdevice.setSensingDeviceId(rs.getInt(1));
+				sensingdevice.setProjectID(rs.getInt(2));
+				sensingdevice.setDeviceName(rs.getString(3));
+				sensingdevice.setMac(rs.getString(4));
+				sensingdevice.setProtocol(rs.getString(5));
+				sensingdevice.setDescription(rs.getString(6));
+				sensingdevice.setLocaltion(rs.getString(7));
+				sensingdevice.setDeviceKey(rs.getString(8));
+				sensingdevice.setProjectName(rs.getString(10));
+				sensingdevice.setTypeCount(countDeviceDataType(rs.getInt(1)));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(9));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				sensingdevice.setCreateTime(createTime);
+				
+				sensingDeviceList.add(sensingdevice);
+			}
+			System.out.println("getSensingDeviceListByProjectID: "+sensingDeviceList.toString());
+			return sensingDeviceList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return sensingDeviceList;
 	}
 	
 	public int countDeviceConfigType(int deviceID){
