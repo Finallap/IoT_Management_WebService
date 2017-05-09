@@ -49,10 +49,21 @@ public class ServiceDelegate {
 		return service.queryProject(UserID, count, offset);
 	}
 
+	public String getProjectByProjectID(int ProjectID) {
+		return service.getProjectByProjectID(ProjectID);
+	}
+
 	public String addControllingDevice(int ProjectID, String DeviceName,
 			String Mac, String Protocol, String Description, String Localtion,
 			String DeviceKey) {
 		return service.addControllingDevice(ProjectID, DeviceName, Mac,
+				Protocol, Description, Localtion, DeviceKey);
+	}
+
+	public String updateControllingDevice(int DeviceID, String DeviceName,
+			String Mac, String Protocol, String Description, String Localtion,
+			String DeviceKey) {
+		return service.updateControllingDevice(DeviceID, DeviceName, Mac,
 				Protocol, Description, Localtion, DeviceKey);
 	}
 
@@ -68,10 +79,21 @@ public class ServiceDelegate {
 		return service.queryUserControllingDevice(UserID, count, offset);
 	}
 
+	public String getControllingDeviceByDeviceID(int DeviceID) {
+		return service.getControllingDeviceByDeviceID(DeviceID);
+	}
+
 	public String addSensingDevice(int ProjectID, String DeviceName,
 			String Mac, String Protocol, String Description, String Localtion,
 			String DeviceKey) {
 		return service.addSensingDevice(ProjectID, DeviceName, Mac, Protocol,
+				Description, Localtion, DeviceKey);
+	}
+
+	public String updateSensingDevice(int DeviceID, String DeviceName,
+			String Mac, String Protocol, String Description, String Localtion,
+			String DeviceKey) {
+		return service.updateSensingDevice(DeviceID, DeviceName, Mac, Protocol,
 				Description, Localtion, DeviceKey);
 	}
 
@@ -85,6 +107,10 @@ public class ServiceDelegate {
 
 	public String queryUserSensingDevice(int UserID, int count, int offset) {
 		return service.queryUserSensingDevice(UserID, count, offset);
+	}
+
+	public String getSensingDeviceByDeviceID(int DeviceID) {
+		return service.getSensingDeviceByDeviceID(DeviceID);
 	}
 
 	public String addDataType(int SensingDeviceID, String Type, String Mark,

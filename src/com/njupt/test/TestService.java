@@ -74,7 +74,7 @@ public class TestService {
 	
 	@Ignore
 	public void testAddSensingDevice(){
-		String result = se.addSensingDevice(3 ,"²âÊÔ´«¸ĞÆ÷" ,"df-sd-sd-f-df-df-sd" ,"HTTP" ,"Ò»¶ÎÎÄ×ÖÃèÊö" ,"ÈıÅÆÂ¥","dfdsfsafdsafdsagfgdgfd");
+		String result = se.addSensingDevice(3 ,"²âÊÔ´«¸ĞÆ÷3" ,"df-sd-sd-f-df-df-sd" ,"HTTP" ,"Ò»¶ÎÎÄ×ÖÃèÊö" ,"ÈıÅÆÂ¥","dfdsfsafdsafdsagfgdgfd");
 		System.out.println(result);
 	}
 	
@@ -107,20 +107,50 @@ public class TestService {
 	}
 	
 	@Ignore
-	public void testqueryProject(){
+	public void testQueryProject(){
 		String result = se.queryProject(1,-1,0);
 		System.out.println(result);
 	}
 	
-	@Test
-	public void testqueryUserControllingDevice(){
+	@Ignore
+	public void testQueryUserControllingDevice(){
 		String result = se.queryUserControllingDevice(1,-1,0);
 		System.out.println(result);
 	}
 	
-	@Test
-	public void testqueryUserSensingDevice(){
+	@Ignore
+	public void testQueryUserSensingDevice(){
 		String result = se.queryUserSensingDevice(1,-1,0);
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testGetProjectByProjectID(){
+		String result = se.getProjectByProjectID(3);
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testGETControllingDeviceByDeviceID(){
+		String result = se.getControllingDeviceByDeviceID(2);
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testGeSensingDeviceByDeviceID(){
+		String result = se.getSensingDeviceByDeviceID(3);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testUpdateControllingDevice(){
+		String result = se.updateControllingDevice(2 ,"¿ØÖÆÆ÷11111" ,"aa-bb-cc-dd-ee-ff-gg" ,"TCP" ,"ÃèÊöÃèÊöÃèÊöÃèÊöÃèÊö" ,"ÏÉÁÖ" ,"fdfdsfsdhthjkiuyewiyruhfnjkndsmf");
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testUpdateSensingDevice(){
+		String result = se.updateSensingDevice(3 ,"´«¸ĞÆ÷222" ,"aa-bb-cc-dd-ee-ff-gg" ,"TCP" ,"ÃèÊöÃèÊöÃèÊöÃèÊöÃèÊö" ,"ÏÉÁÖ" ,"fdfdsfsdhthjkiuyewiyruhfnjkndsmf");
 		System.out.println(result);
 	}
 }

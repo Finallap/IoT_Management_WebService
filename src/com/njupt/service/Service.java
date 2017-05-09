@@ -123,6 +123,22 @@ public class Service {
 		}
 	}
 	
+	public String getProjectByProjectID(int ProjectID) {
+		boolean exist= db.existProjectByProjectID(ProjectID);
+		if(exist){
+			Project project = db.getProjectByProjectID(ProjectID);
+			JSONObject projectJsonObject = JSONObject.fromObject(project);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("Project", projectJsonObject);
+	        System.out.println("getProjectByProjectID: "+jsonObject.toString());
+			return jsonObject.toString();
+		}else{
+			System.out.println("getProjectByProjectID: 项目不存在");
+			return "{\"status\":\"Project not exist\"}";
+		}
+	}
+	
 	public String addControllingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
 		boolean exist= db.existProjectByProjectID(ProjectID);
 		if(exist){
@@ -138,6 +154,23 @@ public class Service {
 		}else{
 			System.out.println("addControllingDevice: 项目不存在");
 			return "{\"status\":\"Project not exist\"}";
+		}
+	}
+	
+	public String updateControllingDevice(int DeviceID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion ,String DeviceKey){
+		boolean exist= db.existControllingDeviceByDeviceID(DeviceID);
+		if(exist){
+			boolean flag = db.updateControllingDevice(DeviceID ,DeviceName ,Mac ,Protocol ,Description ,Localtion ,DeviceKey);
+			if(flag==true){
+				System.out.println("updateControllingDevice: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("updateControllingDevice: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("updateControllingDevice: 控制设备不存在");
+			return "{\"status\":\"ControllingDevice not exist\"}";
 		}
 	}
 	
@@ -166,7 +199,7 @@ public class Service {
 			jsonObject.put("status", "success");
 			jsonObject.put("ControllingDeviceNum", value);
 			
-			System.out.println("updateProject: "+jsonObject.toString());
+			System.out.println("countUserControllingDevice: "+jsonObject.toString());
 			return jsonObject.toString();
 		}else{
 			System.out.println("updateProject: 用户不存在");
@@ -190,6 +223,22 @@ public class Service {
 		}
 	}
 	
+	public String getControllingDeviceByDeviceID(int DeviceID) {
+		boolean exist= db.existControllingDeviceByDeviceID(DeviceID);
+		if(exist){
+			Controllingdevice controllingdevice = db.getControllingDeviceByDeviceID(DeviceID);
+			JSONObject deviceJsonObject = JSONObject.fromObject(controllingdevice);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("ControllingDevice", deviceJsonObject);
+	        System.out.println("getControllingDeviceByDeviceID: "+jsonObject.toString());
+			return jsonObject.toString();
+		}else{
+			System.out.println("getControllingDeviceByDeviceID: 控制设备不存在");
+			return "{\"status\":\"ControllingDevice not exist\"}";
+		}
+	}
+	
 	public String addSensingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
 		boolean exist= db.existProjectByProjectID(ProjectID);
 		if(exist){
@@ -208,6 +257,23 @@ public class Service {
 		}
 	}
 	
+	public String updateSensingDevice(int DeviceID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion ,String DeviceKey){
+		boolean exist= db.existSensingDeviceByDeviceID(DeviceID);
+		if(exist){
+			boolean flag = db.updateSensingDevice(DeviceID ,DeviceName ,Mac ,Protocol ,Description ,Localtion ,DeviceKey);
+			if(flag==true){
+				System.out.println("updateSensingDevice: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("updateSensingDevice: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("updateSensingDevice: 控制设备不存在");
+			return "{\"status\":\"SensingDevice not exist\"}";
+		}
+	}
+	
 	public String deleteSensingDevice(int SensingDeviceID){
 		boolean exist= db.existSensingDeviceByDeviceID(SensingDeviceID);
 		if(exist){
@@ -220,7 +286,7 @@ public class Service {
 				return "{\"status\":\"failed\"}";
 			}
 		}else{
-			System.out.println("deleteSensingDevice: 控制设备不存在");
+			System.out.println("deleteSensingDevice: 传感设备不存在");
 			return "{\"status\":\"SensingDevice not exist\"}";
 		}
 	}
@@ -231,12 +297,12 @@ public class Service {
 			int value = db.countUserSensingDevice(UserID);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status", "success");
-			jsonObject.put("ControllingDeviceNum", value);
+			jsonObject.put("SensingDeviceNum", value);
 			
 			return jsonObject.toString();
 		}else{
-			System.out.println("updateProject: 用户不存在");
-			return "{\"status\":\"Project not exist\"}";
+			System.out.println("countUserSensingDevice: 用户不存在");
+			return "{\"status\":\"User not exist\"}";
 		}
 	}
 	
@@ -253,6 +319,22 @@ public class Service {
 		}else{
 			System.out.println("countProject: 用户不存在");
 			return "{\"status\":\"User not exist\"}";
+		}
+	}
+	
+	public String getSensingDeviceByDeviceID(int DeviceID) {
+		boolean exist= db.existSensingDeviceByDeviceID(DeviceID);
+		if(exist){
+			Sensingdevice sensingdevice = db.getSensingDeviceByDeviceID(DeviceID);
+			JSONObject deviceJsonObject = JSONObject.fromObject(sensingdevice);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("SensingDevice", deviceJsonObject);
+	        System.out.println("getSensingDeviceByDeviceID: "+jsonObject.toString());
+			return jsonObject.toString();
+		}else{
+			System.out.println("getSensingDeviceByDeviceID: 控制设备不存在");
+			return "{\"status\":\"SensingDevice not exist\"}";
 		}
 	}
 	

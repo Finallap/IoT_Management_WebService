@@ -344,8 +344,7 @@ public class Dao {
 			return "{\"status\":\"Project not exist\"}";
 		}
 	}
-	
-	
+
 	public boolean existProjectByProjectID(int ProjectID){
 		boolean value=false;
 		String sql = "select count(*) from project where ProjectID=?";
@@ -496,6 +495,53 @@ public class Dao {
 		return projectList;
 	}
 	
+	public Project getProjectByProjectID(int ProjectID){
+		Project project = null;
+		String sql = "SELECT * FROM `project` WHERE `ProjectID` = ?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ProjectID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				project = new Project();
+				project.setProjectId(rs.getInt(1));
+				project.setUserID(rs.getInt(2));
+				project.setProjectName(rs.getString(3));
+				project.setIsPublic(rs.getBoolean(4));
+				project.setProjectKey(rs.getString(5));
+				project.setControllingDeviceNum(countProjectControllingDeviceID(rs.getInt(1)));
+				project.setSensingDeviceNum(countProjectSensingDevices(rs.getInt(1)));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(6));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				project.setCreateTime(createTime);
+			}
+			
+			return project;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
 	public int countProjectSensingDevices(int ProjectID){
 		ResultSet rs = null;
 		Connection conn = null;
@@ -575,6 +621,38 @@ public class Dao {
 			pstmt.setString(6, Localtion);
 			pstmt.setString(7, DeviceKey);
 			pstmt.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public Boolean updateControllingDevice(int DeviceID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion ,String DeviceKey){
+		String sql = "UPDATE `controllingdevice` SET `DeviceName` = ?, `Mac` = ?, `Protocol` = ?, `Description` = ?, `Localtion` = ?, `DeviceKey` = ? WHERE `ControllingDeviceID` = ?;";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, DeviceName);
+			pstmt.setString(2, Mac);
+			pstmt.setString(3, Protocol);
+			pstmt.setString(4, Description);
+			pstmt.setString(5, Localtion);
+			pstmt.setString(6, DeviceKey);
+			pstmt.setInt(7, DeviceID);
 				
 			int flag = pstmt.executeUpdate();
 			if(flag==1){
@@ -713,6 +791,7 @@ public class Dao {
 				controllingdevice.setLocaltion(rs.getString(7));
 				controllingdevice.setDeviceKey(rs.getString(8));
 				controllingdevice.setProjectName(rs.getString(10));
+				controllingdevice.setTypeCount(countDeviceConfigType(rs.getInt(1)));
 				
 				//将创建时间转换为String
 				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -744,6 +823,56 @@ public class Dao {
 		}
 		return controllingDeviceList;
 	}
+	
+	public Controllingdevice getControllingDeviceByDeviceID(int DeviceID){
+		Controllingdevice controllingdevice = null;
+		String sql = "select controllingdevice.*,project.`ProjectName` from controllingdevice,project WHERE controllingdevice.`ControllingDeviceID` = ? AND controllingdevice.`ProjectID` = project.`ProjectID`";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DeviceID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				controllingdevice = new Controllingdevice();
+				controllingdevice.setControllingDeviceId(rs.getInt(1));
+				controllingdevice.setProjectID(rs.getInt(2));
+				controllingdevice.setDeviceName(rs.getString(3));
+				controllingdevice.setMac(rs.getString(4));
+				controllingdevice.setProtocol(rs.getString(5));
+				controllingdevice.setDescription(rs.getString(6));
+				controllingdevice.setLocaltion(rs.getString(7));
+				controllingdevice.setDeviceKey(rs.getString(8));
+				controllingdevice.setProjectName(rs.getString(10));
+				controllingdevice.setTypeCount(countDeviceConfigType(rs.getInt(1)));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(9));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				controllingdevice.setCreateTime(createTime);
+			}
+			
+			return controllingdevice;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 
 	public Boolean addSensingDevice(int ProjectID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion,String DeviceKey){
 		String sql = "INSERT INTO `sensingdevice` (`ProjectID`, `DeviceName`, `Mac`, `Protocol`, `Description`, `Localtion`, `DeviceKey`, `CreateTime`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -758,6 +887,38 @@ public class Dao {
 			pstmt.setString(6, Localtion);
 			pstmt.setString(7, DeviceKey);
 			pstmt.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public Boolean updateSensingDevice(int DeviceID ,String DeviceName ,String Mac ,String Protocol ,String Description ,String Localtion ,String DeviceKey){
+		String sql = "UPDATE `sensingdevice` SET `DeviceName` = ?, `Mac` = ?, `Protocol` = ?, `Description` = ?, `Localtion` = ?, `DeviceKey` = ? WHERE `SensingDeviceID` = ?;";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, DeviceName);
+			pstmt.setString(2, Mac);
+			pstmt.setString(3, Protocol);
+			pstmt.setString(4, Description);
+			pstmt.setString(5, Localtion);
+			pstmt.setString(6, DeviceKey);
+			pstmt.setInt(7, DeviceID);
 				
 			int flag = pstmt.executeUpdate();
 			if(flag==1){
@@ -896,6 +1057,7 @@ public class Dao {
 				sensingdevice.setLocaltion(rs.getString(7));
 				sensingdevice.setDeviceKey(rs.getString(8));
 				sensingdevice.setProjectName(rs.getString(10));
+				sensingdevice.setTypeCount(countDeviceDataType(rs.getInt(1)));
 				
 				//将创建时间转换为String
 				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -928,4 +1090,121 @@ public class Dao {
 		return sensingDeviceList;
 	}
 	
+	public Sensingdevice getSensingDeviceByDeviceID(int DeviceID){
+		Sensingdevice sensingdevice = null;
+		String sql = "select sensingdevice.*,project.`ProjectName` from sensingdevice,project WHERE sensingdevice.`SensingDeviceID` = ? AND sensingdevice.`ProjectID` = project.`ProjectID`";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DeviceID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				sensingdevice = new Sensingdevice();
+				sensingdevice.setSensingDeviceId(rs.getInt(1));
+				sensingdevice.setProjectID(rs.getInt(2));
+				sensingdevice.setDeviceName(rs.getString(3));
+				sensingdevice.setMac(rs.getString(4));
+				sensingdevice.setProtocol(rs.getString(5));
+				sensingdevice.setDescription(rs.getString(6));
+				sensingdevice.setLocaltion(rs.getString(7));
+				sensingdevice.setDeviceKey(rs.getString(8));
+				sensingdevice.setProjectName(rs.getString(10));
+				sensingdevice.setTypeCount(countDeviceDataType(rs.getInt(1)));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(9));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				sensingdevice.setCreateTime(createTime);
+			}
+			
+			return sensingdevice;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public int countDeviceConfigType(int deviceID){
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		int result = 0;
+		String sql = "select count(*) from configtype where ControllingDeviceID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, deviceID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result=rs.getInt(1);
+			}
+			System.out.println("countDeviceConfigType: "+result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public int countDeviceDataType(int deviceID){
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		int result = 0;
+		String sql = "select count(*) from datatype where SensingDeviceID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, deviceID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result=rs.getInt(1);
+			}
+			System.out.println("countDeviceDataType: "+result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 }
