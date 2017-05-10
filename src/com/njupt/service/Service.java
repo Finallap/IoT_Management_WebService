@@ -5,7 +5,9 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 
+import com.njupt.bean.Configtype;
 import com.njupt.bean.Controllingdevice;
+import com.njupt.bean.Datatype;
 import com.njupt.bean.Project;
 import com.njupt.bean.Sensingdevice;
 import com.njupt.bean.User;
@@ -422,6 +424,21 @@ public class Service {
 		}
 	}
 	
+	public String  getConfigTypeListByDeviceID(int DeviceID){
+		boolean exist= db.existControllingDeviceByDeviceID(DeviceID);
+		if(exist){
+			List<Configtype> value = db. getConfigTypeListByDeviceID(DeviceID);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("ConfigTypeList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("getConfigTypeListByDeviceID: 控制设备不存在");
+			return "{\"status\":\"ControllingDevice not exist\"}";
+		}
+	}
+	
 	public String addDataType(int SensingDeviceID ,String Type ,String Mark ,String Symbol){
 		boolean exist= db.existSensingDeviceByDeviceID(SensingDeviceID);
 		if(exist){
@@ -473,6 +490,21 @@ public class Service {
 		}else{
 			System.out.println("deleteDataType: 数据类型不存在");
 			return "{\"status\":\"DataType not exist\"}";
+		}
+	}
+	
+	public String  getDataTypeListByDeviceID(int DeviceID){
+		boolean exist= db.existSensingDeviceByDeviceID(DeviceID);
+		if(exist){
+			List<Datatype> value = db. getDataTypeListByDeviceID(DeviceID);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("DataTypeList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("getDataTypeListByDeviceID: 传感设备不存在");
+			return "{\"status\":\"SensingDevice not exist\"}";
 		}
 	}
 	

@@ -3,7 +3,9 @@ package com.njupt.service;
 import java.sql.Date;
 import java.util.List;
 import net.sf.json.JSONObject;
+import com.njupt.bean.Configtype;
 import com.njupt.bean.Controllingdevice;
+import com.njupt.bean.Datatype;
 import com.njupt.bean.Project;
 import com.njupt.bean.Sensingdevice;
 import com.njupt.bean.User;
@@ -135,6 +137,10 @@ public class ServiceDelegate {
 		return service.deleteConfigType(ConfigTypeID);
 	}
 
+	public String getConfigTypeListByDeviceID(int DeviceID) {
+		return service.getConfigTypeListByDeviceID(DeviceID);
+	}
+
 	public String addDataType(int SensingDeviceID, String Type, String Mark,
 			String Symbol) {
 		return service.addDataType(SensingDeviceID, Type, Mark, Symbol);
@@ -147,6 +153,10 @@ public class ServiceDelegate {
 
 	public String deleteDataType(int DataTypeID) {
 		return service.deleteDataType(DataTypeID);
+	}
+
+	public String getDataTypeListByDeviceID(int DeviceID) {
+		return service.getDataTypeListByDeviceID(DeviceID);
 	}
 
 }

@@ -190,15 +190,27 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testDeleteConfigType(){
 		String result = se.deleteConfigType(3);
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testDeleteDataType(){
 		String result = se.deleteDataType(1);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testGetConfigTypeListByDeviceID(){
+		String result = se.getConfigTypeListByDeviceID(6);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testGetDataTypeListByDeviceID(){
+		String result = se.getDataTypeListByDeviceID(5);
 		System.out.println(result);
 	}
 }

@@ -18,7 +18,9 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.njupt.bean.Configtype;
 import com.njupt.bean.Controllingdevice;
+import com.njupt.bean.Datatype;
 import com.njupt.bean.Project;
 import com.njupt.bean.Sensingdevice;
 import com.njupt.bean.User;
@@ -1404,6 +1406,57 @@ public class Dao {
 		return result;
 	}
 	
+	public List<Configtype> getConfigTypeListByDeviceID(int DeviceID){
+		// TODO Auto-generated method stub
+		List<Configtype> ConfigTypeList = new ArrayList<Configtype>(); 
+		Configtype configtype;
+		
+		String sql = "SELECT * FROM `configtype` WHERE `ControllingDeviceID` = ?";
+
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DeviceID);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				configtype = new Configtype();
+				configtype.setConfigTypeId(rs.getInt(1));
+				configtype.setControllingDeviceID(rs.getInt(2));
+				configtype.setConfigTypeName(rs.getString(3));
+				configtype.setMark(rs.getString(4));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(5));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				configtype.setCreateTime(createTime);
+				
+				ConfigTypeList.add(configtype);
+			}
+			System.out.println("getConfigTypeListByDeviceID: "+ConfigTypeList.toString());
+			return ConfigTypeList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return ConfigTypeList;
+	}
+	
 	public Boolean addDataType(int SensingDeviceID ,String Type ,String Mark ,String Symbol){
 		String sql = "INSERT INTO `datatype` (`DataTypeID`, `SensingDeviceID`, `Type`, `Mark`, `Symbol`, `CreateTime`) VALUES (NULL, ?, ?, ?, ?, ?)";
 		try {
@@ -1554,5 +1607,57 @@ public class Dao {
 			}
 		}
 		return result;
+	}
+	
+	public List<Datatype> getDataTypeListByDeviceID(int DeviceID){
+		// TODO Auto-generated method stub
+		List<Datatype> DataTypeList = new ArrayList<Datatype>(); 
+		Datatype datetype;
+		
+		String sql = "SELECT * FROM `datatype` WHERE `SensingDeviceID` = ?";
+
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DeviceID);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				datetype = new Datatype();
+				datetype.setDataTypeId(rs.getInt(1));
+				datetype.setSensingDeviceID(rs.getInt(2));
+				datetype.setType(rs.getString(3));
+				datetype.setMark(rs.getString(4));
+				datetype.setSymbol(rs.getString(5));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(6));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				datetype.setCreateTime(createTime);
+				
+				DataTypeList.add(datetype);
+			}
+			System.out.println("getDataTypeListByDeviceID: "+DataTypeList.toString());
+			return DataTypeList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return DataTypeList;
 	}
 }
