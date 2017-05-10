@@ -159,4 +159,16 @@ public class ServiceDelegate {
 		return service.getDataTypeListByDeviceID(DeviceID);
 	}
 
+	public String getDataLog(int DataTypeID, String start_date,
+			String end_date, int limite, int offset) {
+		return service.getDataLog(DataTypeID, start_date, end_date, limite,
+				offset);
+	}
+
+	public String getConfigLog(int ConfigTypeID, String start_date,
+			String end_date, int limite, int offset) {
+		return service.getConfigLog(ConfigTypeID, start_date, end_date, limite,
+				offset);
+	}
+
 }

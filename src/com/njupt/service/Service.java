@@ -508,11 +508,11 @@ public class Service {
 		}
 	}
 	
-//	public String getDataLog(int DataTypeID ,Date start_date ,Date end_date ,int limite ,int offset){
-//		return "";
-//	}
-//	
-//	public String getConfigLog(int ControllingDeviceID ,Date start_date ,Date end_date ,int limite ,int offset){
-//		return "";
-//	}
+	public String getDataLog(int DataTypeID ,String start_date ,String end_date ,int limite ,int offset){
+		return "";
+	}
+	
+	public String getConfigLog(int ConfigTypeID ,String start_date ,String end_date ,int limite ,int offset){
+		return "";
+	}
 }
