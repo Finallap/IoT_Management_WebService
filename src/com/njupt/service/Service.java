@@ -368,28 +368,112 @@ public class Service {
 		}
 	}
 	
-	public String addDataType(int SensingDeviceID ,String Type ,String Mark ,String Symbol){
-		return "";
-	}
-	
-	public String deleteDataType(int DataTypeID){
-		return "";
-	}
-	
-	public String countDataType(int SensingDeviceID){
-		return "";
-	}
-	
 	public String addConfigType(int ControllingDeviceID ,String ConfigTypeName ,String Mark){
-		return "";
+		boolean exist= db.existControllingDeviceByDeviceID(ControllingDeviceID);
+		if(exist){
+			boolean flag = db.addConfigType(ControllingDeviceID ,ConfigTypeName ,Mark);
+			
+			if(flag==true){
+				System.out.println("addConfigType: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("addConfigType: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("addConfigType: 控制设备不存在");
+			return "{\"status\":\"ControllingDevice not exist\"}";
+		}
+	}
+	
+	public String updateConfigType(int ConfigTypeID ,String ConfigTypeName ,String Mark){
+		boolean exist= db.existConfigTypeByTypeID(ConfigTypeID);
+		if(exist){
+			boolean flag = db.updateConfigType(ConfigTypeID ,ConfigTypeName ,Mark );
+			
+			if(flag==true){
+				System.out.println("updateConfigType: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("updateConfigType: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("updateConfigType: 控制类型不存在");
+			return "{\"status\":\"ConfigType not exist\"}";
+		}
 	}
 	
 	public String deleteConfigType(int ConfigTypeID){
-		return "";
+		boolean exist= db.existConfigTypeByTypeID(ConfigTypeID);
+		if(exist){
+			boolean flag = db.deleteConfigType(ConfigTypeID);
+			
+			if(flag==true){
+				System.out.println("deleteConfigType: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("deleteConfigType: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("deleteConfigType: 控制类型不存在");
+			return "{\"status\":\"ConfigType not exist\"}";
+		}
 	}
-
-	public String countConfigType(int ControllingDeviceID){
-		return "";
+	
+	public String addDataType(int SensingDeviceID ,String Type ,String Mark ,String Symbol){
+		boolean exist= db.existSensingDeviceByDeviceID(SensingDeviceID);
+		if(exist){
+			boolean flag = db.addDataType(SensingDeviceID ,Type ,Mark ,Symbol);
+			
+			if(flag==true){
+				System.out.println("addDataType: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("addDataType: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("addDataType: 传感设备不存在");
+			return "{\"status\":\"SensingDevice not exist\"}";
+		}
+	}
+	
+	public String updateDataType(int DataTypeID ,String Type ,String Mark ,String Symbol){
+		boolean exist= db.existDataTypeByTypeID(DataTypeID);
+		if(exist){
+			boolean flag = db.updateDataType(DataTypeID ,Type ,Mark ,Symbol);
+			
+			if(flag==true){
+				System.out.println("updateDataType: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("updateDataType: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("updateDataType: 数据类型不存在");
+			return "{\"status\":\"DataType not exist\"}";
+		}
+	}
+	
+	public String deleteDataType(int DataTypeID){
+		boolean exist= db.existDataTypeByTypeID(DataTypeID);
+		if(exist){
+			boolean flag = db.deleteDataType(DataTypeID);
+			
+			if(flag==true){
+				System.out.println("deleteDataType: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("deleteDataType: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("deleteDataType: 数据类型不存在");
+			return "{\"status\":\"DataType not exist\"}";
+		}
 	}
 	
 //	public String getDataLog(int DataTypeID ,Date start_date ,Date end_date ,int limite ,int offset){

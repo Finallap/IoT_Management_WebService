@@ -156,13 +156,49 @@ public class TestService {
 	
 	@Ignore
 	public void testGetControllingDeviceListByProjectID(){
-		String result = se.getControllingDeviceListByProjectID(3);
+		String result = se.getControllingDeviceListByProjectID(2);
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testGetSensingDeviceListByProjectID(){
+		String result = se.getSensingDeviceListByProjectID(2);
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testAddConfigType(){
+		String result = se.addConfigType(2 ,"关闭" ,"shutdown");
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testAddDataType(){
+		String result = se.addDataType(4 ,"气温" ,"temperature","华氏度");
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testUpdateConfigType(){
+		String result = se.updateConfigType(3 ,"指令" ,"cmd");
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testUpdateDataType(){
+		String result = se.updateDataType(2 ,"气温" ,"temperature","华氏度");
 		System.out.println(result);
 	}
 	
 	@Test
-	public void testGetSensingDeviceListByProjectID(){
-		String result = se.getSensingDeviceListByProjectID(3);
+	public void testDeleteConfigType(){
+		String result = se.deleteConfigType(3);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testDeleteDataType(){
+		String result = se.deleteDataType(1);
 		System.out.println(result);
 	}
 }

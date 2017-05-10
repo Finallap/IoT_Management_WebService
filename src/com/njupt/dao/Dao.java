@@ -1254,6 +1254,122 @@ public class Dao {
 		return sensingDeviceList;
 	}
 	
+	public Boolean addConfigType(int ControllingDeviceID ,String ConfigTypeName ,String Mark){
+		String sql = "INSERT INTO `configtype` (`ConfigTypeID`, `ControllingDeviceID`, `ConfigTypeName`, `Mark`, `CreateTime`) VALUES (NULL, ?, ?, ?, ?)";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ControllingDeviceID);
+			pstmt.setString(2, ConfigTypeName);
+			pstmt.setString(3, Mark);
+			pstmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public Boolean updateConfigType(int ConfigTypeID ,String ConfigTypeName ,String Mark){
+		String sql = "UPDATE`configtype` SET `ConfigTypeName` = ?, `Mark` = ? WHERE `ConfigTypeID` = ?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, ConfigTypeName);
+			pstmt.setString(2, Mark);
+			pstmt.setInt(3, ConfigTypeID);
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public boolean existConfigTypeByTypeID(int TypeID){
+		boolean value=false;
+		String sql = "select count(*) from configtype where ConfigTypeID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, TypeID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int res=rs.getInt(1);
+				if(res>0){
+					value=true;
+				}
+			}
+			System.out.println("existConfigTypeByTypeID: "+value);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return value;
+	}
+	
+	public Boolean deleteConfigType(int ConfigTypeID){
+		String sql = "DELETE FROM `configtype` WHERE `ConfigTypeID` = ?";
+		int flag=0;
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ConfigTypeID);
+			flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;			
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			try{
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
 	public int countDeviceConfigType(int deviceID){
 		ResultSet rs = null;
 		Connection conn = null;
@@ -1286,6 +1402,124 @@ public class Dao {
 			}
 		}
 		return result;
+	}
+	
+	public Boolean addDataType(int SensingDeviceID ,String Type ,String Mark ,String Symbol){
+		String sql = "INSERT INTO `datatype` (`DataTypeID`, `SensingDeviceID`, `Type`, `Mark`, `Symbol`, `CreateTime`) VALUES (NULL, ?, ?, ?, ?, ?)";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, SensingDeviceID);
+			pstmt.setString(2, Type);
+			pstmt.setString(3, Mark);
+			pstmt.setString(4, Symbol);
+			pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public Boolean updateDataType(int DataTypeID ,String Type ,String Mark ,String Symbol){
+		String sql = "UPDATE `datatype` SET `Type` = ?, `Mark` = ?, `Symbol` = ? WHERE `DataTypeID` = ?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, Type);
+			pstmt.setString(2, Mark);
+			pstmt.setString(3, Symbol);
+			pstmt.setInt(4, DataTypeID);
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public boolean existDataTypeByTypeID(int TypeID){
+		boolean value=false;
+		String sql = "select count(*) from datatype where DataTypeID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, TypeID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int res=rs.getInt(1);
+				if(res>0){
+					value=true;
+				}
+			}
+			System.out.println("existDataTypeByTypeID: "+value);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return value;
+	}
+	
+	public Boolean deleteDataType(int DataTypeID){
+		String sql = "DELETE FROM `datatype` WHERE `DataTypeID` = ?";
+		int flag=0;
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DataTypeID);
+			flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;			
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			try{
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 	
 	public int countDeviceDataType(int deviceID){

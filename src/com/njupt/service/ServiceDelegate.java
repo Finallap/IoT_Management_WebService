@@ -121,30 +121,32 @@ public class ServiceDelegate {
 		return service.getSensingDeviceListByProjectID(ProjectID);
 	}
 
-	public String addDataType(int SensingDeviceID, String Type, String Mark,
-			String Symbol) {
-		return service.addDataType(SensingDeviceID, Type, Mark, Symbol);
-	}
-
-	public String deleteDataType(int DataTypeID) {
-		return service.deleteDataType(DataTypeID);
-	}
-
-	public String countDataType(int SensingDeviceID) {
-		return service.countDataType(SensingDeviceID);
-	}
-
 	public String addConfigType(int ControllingDeviceID, String ConfigTypeName,
 			String Mark) {
 		return service.addConfigType(ControllingDeviceID, ConfigTypeName, Mark);
+	}
+
+	public String updateConfigType(int ConfigTypeID, String ConfigTypeName,
+			String Mark) {
+		return service.updateConfigType(ConfigTypeID, ConfigTypeName, Mark);
 	}
 
 	public String deleteConfigType(int ConfigTypeID) {
 		return service.deleteConfigType(ConfigTypeID);
 	}
 
-	public String countConfigType(int ControllingDeviceID) {
-		return service.countConfigType(ControllingDeviceID);
+	public String addDataType(int SensingDeviceID, String Type, String Mark,
+			String Symbol) {
+		return service.addDataType(SensingDeviceID, Type, Mark, Symbol);
+	}
+
+	public String updateDataType(int DataTypeID, String Type, String Mark,
+			String Symbol) {
+		return service.updateDataType(DataTypeID, Type, Mark, Symbol);
+	}
+
+	public String deleteDataType(int DataTypeID) {
+		return service.deleteDataType(DataTypeID);
 	}
 
 }
