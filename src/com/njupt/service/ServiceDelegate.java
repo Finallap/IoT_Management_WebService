@@ -7,6 +7,7 @@ import com.njupt.bean.Configlog;
 import com.njupt.bean.Configtype;
 import com.njupt.bean.Controllingdevice;
 import com.njupt.bean.Datatype;
+import com.njupt.bean.Devicedata;
 import com.njupt.bean.Project;
 import com.njupt.bean.Sensingdevice;
 import com.njupt.bean.User;
@@ -160,15 +161,15 @@ public class ServiceDelegate {
 		return service.getDataTypeListByDeviceID(DeviceID);
 	}
 
-	public String getDataLogByDeviceID(int DeviceID, String start_date,
-			String end_date, int limite, int offset) {
-		return service.getDataLogByDeviceID(DeviceID, start_date, end_date,
-				limite, offset);
-	}
-
 	public String getConfigLogByDeviceID(int DeviceID, String start_date,
 			String end_date, int limite, int offset) {
 		return service.getConfigLogByDeviceID(DeviceID, start_date, end_date,
+				limite, offset);
+	}
+
+	public String getDataLogByDeviceID(int DeviceID, String start_date,
+			String end_date, int limite, int offset) {
+		return service.getDataLogByDeviceID(DeviceID, start_date, end_date,
 				limite, offset);
 	}
 

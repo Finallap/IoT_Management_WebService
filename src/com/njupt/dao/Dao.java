@@ -1,10 +1,7 @@
 package com.njupt.dao;
 
 import java.beans.PropertyVetoException;
-import java.io.IOException;
-import java.net.URI;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,9 +10,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.njupt.bean.Configlog;
@@ -1663,6 +1657,46 @@ public class Dao {
 		return DataTypeList;
 	}
 	
+	public int countConfigLogByDeviceID(int DeviceID ,String start_date ,String end_date){
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		int result = 0;
+		String sql = "SELECT *"
+				+ " FROM `configlog`"
+				+ " WHERE `ConfigTypeID` in (select ConfigTypeID from configtype where ControllingDeviceID = ?)"
+				+ " AND `Savetime` >= ?"
+				+ " AND `Savetime` <= ?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DeviceID);
+			pstmt.setString(2, start_date);
+			pstmt.setString(3, end_date);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result=rs.getInt(1);
+			}
+			System.out.println("countConfigLogByDeviceID: "+result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 	public List<Configlog> getConfigLogByDeviceID(int DeviceID ,String start_date ,String end_date ,int limite ,int offset){
 		List<Configlog> ConfigLogList = new ArrayList<Configlog>(); 
 		Configlog configlog;
@@ -1727,6 +1761,45 @@ public class Dao {
 			}
 		}
 		return ConfigLogList;
+	}
+	
+	public int countDataLogByDeviceID(int DeviceID ,String start_date ,String end_date){
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		int result = 0;
+		String sql = "SELECT * FROM `devicedata`"
+				+ " WHERE `DataTypeID` in (select DataTypeID from datatype where SensingDeviceID = ?)"
+				+ " AND `Savetime` >= ?"
+				+ " AND `Savetime` <= ?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DeviceID);
+			pstmt.setString(2, start_date);
+			pstmt.setString(3, end_date);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result=rs.getInt(1);
+			}
+			System.out.println("countDataLogByDeviceID: "+result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 	
 	public List<Devicedata> getDataLogByDeviceID(int DeviceID ,String start_date ,String end_date ,int limite ,int offset){

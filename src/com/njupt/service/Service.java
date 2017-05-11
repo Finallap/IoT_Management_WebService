@@ -1,6 +1,5 @@
 package com.njupt.service;
 
-import java.sql.Date;
 import java.util.List;
 
 import net.sf.json.JSONObject;
@@ -14,7 +13,6 @@ import com.njupt.bean.Project;
 import com.njupt.bean.Sensingdevice;
 import com.njupt.bean.User;
 import com.njupt.dao.Dao;
-import com.njupt.tools.Tools;
 
 
 
@@ -352,7 +350,7 @@ public class Service {
 	        System.out.println("getSensingDeviceByDeviceID: "+jsonObject.toString());
 			return jsonObject.toString();
 		}else{
-			System.out.println("getSensingDeviceByDeviceID: 控制设备不存在");
+			System.out.println("getSensingDeviceByDeviceID: 传感设备不存在");
 			return "{\"status\":\"SensingDevice not exist\"}";
 		}
 	}
@@ -516,6 +514,7 @@ public class Service {
 			List<Configlog> value = db.getConfigLogByDeviceID(DeviceID ,start_date ,end_date ,limite ,offset);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status", "success");
+			jsonObject.put("count", db.countConfigLogByDeviceID(DeviceID, start_date, end_date));
 			jsonObject.put("ConfigLogList", value);
 			
 			return jsonObject.toString();
@@ -532,6 +531,7 @@ public class Service {
 			List<Devicedata> value = db.getDataLogByDeviceID(DeviceID ,start_date ,end_date ,limite ,offset);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status", "success");
+			jsonObject.put("count", db.countDataLogByDeviceID(DeviceID, start_date, end_date));
 			jsonObject.put("DataLogList", value);
 			
 			return jsonObject.toString();

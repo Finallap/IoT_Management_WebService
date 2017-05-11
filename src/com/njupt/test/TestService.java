@@ -214,7 +214,7 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Ignore
+	@Test
 	public void testGetConfigLogByDeviceID(){
 		String result = se.getConfigLogByDeviceID(2 ,"2017-05-02" ,"2017-05-30" ,1 ,1);
 		System.out.println(result);
