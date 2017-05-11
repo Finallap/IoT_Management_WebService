@@ -18,9 +18,11 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.njupt.bean.Configlog;
 import com.njupt.bean.Configtype;
 import com.njupt.bean.Controllingdevice;
 import com.njupt.bean.Datatype;
+import com.njupt.bean.Devicedata;
 import com.njupt.bean.Project;
 import com.njupt.bean.Sensingdevice;
 import com.njupt.bean.User;
@@ -1659,5 +1661,137 @@ public class Dao {
 			}
 		}
 		return DataTypeList;
+	}
+	
+	public List<Configlog> getConfigLogByDeviceID(int DeviceID ,String start_date ,String end_date ,int limite ,int offset){
+		List<Configlog> ConfigLogList = new ArrayList<Configlog>(); 
+		Configlog configlog;
+		
+		String sql = "SELECT `configlog`.*,`configtype`.*"
+				+ " FROM `configlog`,`configtype`"
+				+ " WHERE `configlog`.`ConfigTypeID` in (select ConfigTypeID from configtype where ControllingDeviceID = ?)"
+				+ " AND `configlog`.`Savetime` >= ?"
+				+ " AND `configlog`.`Savetime` <= ?"
+				+ " AND `configlog`.`ConfigTypeID` =`configtype`.`ConfigTypeID`"
+				+ " ORDER BY `configlog`.`Savetime` DESC";
+		if(limite>0)
+			sql = sql + " limit ?,?";
+		
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DeviceID);
+			pstmt.setString(2, start_date);
+			pstmt.setString(3, end_date);
+			if(limite>0)
+			{
+				pstmt.setInt(4, offset);
+				pstmt.setInt(5, limite);
+			}
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				configlog = new Configlog();
+				configlog.setConfigLogID(rs.getInt(1));
+				configlog.setConfigTypeID(rs.getInt(2));
+				configlog.setConfigContent(rs.getString(3));
+				configlog.setConfigTypeName(rs.getString(7));
+				configlog.setMark(rs.getString(8));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(4));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				configlog.setSaveTime(createTime);
+				
+				ConfigLogList.add(configlog);
+			}
+			System.out.println("getConfigLogByDeviceID: "+ConfigLogList.toString());
+			return ConfigLogList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return ConfigLogList;
+	}
+	
+	public List<Devicedata> getDataLogByDeviceID(int DeviceID ,String start_date ,String end_date ,int limite ,int offset){
+		List<Devicedata> DataLogList = new ArrayList<Devicedata>(); 
+		Devicedata datalog;
+		
+		String sql = "SELECT `devicedata`.*,`datatype`.* FROM `devicedata`,`datatype`"
+				+ " WHERE `devicedata`.`DataTypeID` in (select DataTypeID from datatype where SensingDeviceID = ?)"
+				+ " AND `devicedata`.`Savetime` >= ?"
+				+ " AND `devicedata`.`Savetime` <= ?"
+				+ " AND `devicedata`.`DataTypeID`=`datatype`.`DataTypeID`"
+				+ " ORDER BY `devicedata`.`Savetime` DESC";
+		if(limite>0)
+			sql = sql + " limit ?,?";
+		
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DeviceID);
+			pstmt.setString(2, start_date);
+			pstmt.setString(3, end_date);
+			if(limite>0)
+			{
+				pstmt.setInt(4, offset);
+				pstmt.setInt(5, limite);
+			}
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				datalog = new Devicedata();
+				datalog.setDeviceDataID(rs.getInt(1));
+				datalog.setDataTypeID(rs.getInt(2));
+				datalog.setValue(rs.getFloat(3));
+				datalog.setType(rs.getString(7));
+				datalog.setMark(rs.getString(8));
+				datalog.setSymbol(rs.getString(9));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(4));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				datalog.setSaveTime(createTime);
+				
+				DataLogList.add(datalog);
+			}
+			System.out.println("getDataLogByDeviceID: "+DataLogList.toString());
+			return DataLogList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return DataLogList;
 	}
 }

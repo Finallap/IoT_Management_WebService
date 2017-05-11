@@ -5,9 +5,11 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 
+import com.njupt.bean.Configlog;
 import com.njupt.bean.Configtype;
 import com.njupt.bean.Controllingdevice;
 import com.njupt.bean.Datatype;
+import com.njupt.bean.Devicedata;
 import com.njupt.bean.Project;
 import com.njupt.bean.Sensingdevice;
 import com.njupt.bean.User;
@@ -507,12 +509,35 @@ public class Service {
 			return "{\"status\":\"SensingDevice not exist\"}";
 		}
 	}
-	
-	public String getDataLog(int DataTypeID ,String start_date ,String end_date ,int limite ,int offset){
-		return "";
+
+	public String getConfigLogByDeviceID(int DeviceID ,String start_date ,String end_date ,int limite ,int offset){
+		boolean exist= db.existControllingDeviceByDeviceID(DeviceID);
+		if(exist){
+			List<Configlog> value = db.getConfigLogByDeviceID(DeviceID ,start_date ,end_date ,limite ,offset);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("ConfigLogList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("getConfigLogByDeviceID: 控制设备不存在");
+			return "{\"status\":\"Device not exist\"}";
+		}
 	}
 	
-	public String getConfigLog(int ConfigTypeID ,String start_date ,String end_date ,int limite ,int offset){
-		return "";
+	
+	public String getDataLogByDeviceID(int DeviceID ,String start_date ,String end_date ,int limite ,int offset){
+		boolean exist= db.existSensingDeviceByDeviceID(DeviceID);
+		if(exist){
+			List<Devicedata> value = db.getDataLogByDeviceID(DeviceID ,start_date ,end_date ,limite ,offset);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("DataLogList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("getDataLogByDeviceID: 传感设备不存在");
+			return "{\"status\":\"Device not exist\"}";
+		}
 	}
 }

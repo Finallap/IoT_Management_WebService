@@ -202,15 +202,27 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testGetConfigTypeListByDeviceID(){
 		String result = se.getConfigTypeListByDeviceID(6);
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testGetDataTypeListByDeviceID(){
 		String result = se.getDataTypeListByDeviceID(5);
+		System.out.println(result);
+	}
+	
+	@Ignore
+	public void testGetConfigLogByDeviceID(){
+		String result = se.getConfigLogByDeviceID(2 ,"2017-05-02" ,"2017-05-30" ,1 ,1);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testGetDataLogByDeviceID(){
+		String result = se.getDataLogByDeviceID(4 ,"2017-05-02" ,"2017-05-30" ,2 ,1);
 		System.out.println(result);
 	}
 }

@@ -3,6 +3,7 @@ package com.njupt.service;
 import java.sql.Date;
 import java.util.List;
 import net.sf.json.JSONObject;
+import com.njupt.bean.Configlog;
 import com.njupt.bean.Configtype;
 import com.njupt.bean.Controllingdevice;
 import com.njupt.bean.Datatype;
@@ -159,16 +160,16 @@ public class ServiceDelegate {
 		return service.getDataTypeListByDeviceID(DeviceID);
 	}
 
-	public String getDataLog(int DataTypeID, String start_date,
+	public String getDataLogByDeviceID(int DeviceID, String start_date,
 			String end_date, int limite, int offset) {
-		return service.getDataLog(DataTypeID, start_date, end_date, limite,
-				offset);
+		return service.getDataLogByDeviceID(DeviceID, start_date, end_date,
+				limite, offset);
 	}
 
-	public String getConfigLog(int ConfigTypeID, String start_date,
+	public String getConfigLogByDeviceID(int DeviceID, String start_date,
 			String end_date, int limite, int offset) {
-		return service.getConfigLog(ConfigTypeID, start_date, end_date, limite,
-				offset);
+		return service.getConfigLogByDeviceID(DeviceID, start_date, end_date,
+				limite, offset);
 	}
 
 }
