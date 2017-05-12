@@ -1869,4 +1869,89 @@ public class Dao {
 		}
 		return DataLogList;
 	}
+	
+	public Boolean addAlarmRule(int UserID ,int SensingDeviceID ,int DataTypeID ,String Rule ,float Threshold){
+		String sql = "INSERT INTO `alarmrule` (`UserID`, `SensingDeviceID`, `DataTypeID`, `Rule`, `Threshold`) VALUES (?, ?, ?, ?, ?)";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, UserID);
+			pstmt.setInt(2, SensingDeviceID);
+			pstmt.setInt(3, DataTypeID);
+			pstmt.setString(4, Rule);
+			pstmt.setFloat(5, Threshold);
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public Boolean updateAlarmRule(int AlarmRuleID ,String Rule ,float Threshold){
+		String sql = "UPDATE `alarmrule` SET `Rule` = ?, `Threshold` = ? WHERE `AlarmRuleID` = ?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, AlarmRuleID);
+			pstmt.setString(2, Rule);
+			pstmt.setFloat(3, Threshold);
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public Boolean deleteAlarmRule(int AlarmRuleID){
+		String sql = "DELETE FROM `alarmrule` WHERE `AlarmRuleID` = ?";
+		int flag=0;
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, AlarmRuleID);
+			flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;			
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			try{
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
 }
