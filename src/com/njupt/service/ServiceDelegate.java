@@ -1,6 +1,5 @@
 package com.njupt.service;
 
-import java.sql.Date;
 import java.util.List;
 import net.sf.json.JSONObject;
 import com.njupt.bean.Configlog;
@@ -12,7 +11,6 @@ import com.njupt.bean.Project;
 import com.njupt.bean.Sensingdevice;
 import com.njupt.bean.User;
 import com.njupt.dao.Dao;
-import com.njupt.tools.Tools;
 
 @javax.jws.WebService(targetNamespace = "http://service.njupt.com/", serviceName = "ServiceService", portName = "ServicePort")
 public class ServiceDelegate {

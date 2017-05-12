@@ -1663,7 +1663,7 @@ public class Dao {
 		PreparedStatement pstmt = null;
 		
 		int result = 0;
-		String sql = "SELECT *"
+		String sql = "SELECT COUNT(*)"
 				+ " FROM `configlog`"
 				+ " WHERE `ConfigTypeID` in (select ConfigTypeID from configtype where ControllingDeviceID = ?)"
 				+ " AND `Savetime` >= ?"
@@ -1769,7 +1769,8 @@ public class Dao {
 		PreparedStatement pstmt = null;
 		
 		int result = 0;
-		String sql = "SELECT * FROM `devicedata`"
+		String sql = "SELECT COUNT(*)"
+				+ " FROM `devicedata`"
 				+ " WHERE `DataTypeID` in (select DataTypeID from datatype where SensingDeviceID = ?)"
 				+ " AND `Savetime` >= ?"
 				+ " AND `Savetime` <= ?";
@@ -1806,7 +1807,8 @@ public class Dao {
 		List<Devicedata> DataLogList = new ArrayList<Devicedata>(); 
 		Devicedata datalog;
 		
-		String sql = "SELECT `devicedata`.*,`datatype`.* FROM `devicedata`,`datatype`"
+		String sql = "SELECT `devicedata`.*,`datatype`.*"
+				+ " FROM `devicedata`,`datatype`"
 				+ " WHERE `devicedata`.`DataTypeID` in (select DataTypeID from datatype where SensingDeviceID = ?)"
 				+ " AND `devicedata`.`Savetime` >= ?"
 				+ " AND `devicedata`.`Savetime` <= ?"
