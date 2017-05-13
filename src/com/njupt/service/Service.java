@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 
+import com.njupt.bean.AlarmRule;
 import com.njupt.bean.Configlog;
 import com.njupt.bean.Configtype;
 import com.njupt.bean.Controllingdevice;
@@ -524,7 +525,6 @@ public class Service {
 		}
 	}
 	
-	
 	public String getDataLogByDeviceID(int DeviceID ,String start_date ,String end_date ,int limite ,int offset){
 		boolean exist= db.existSensingDeviceByDeviceID(DeviceID);
 		if(exist){
@@ -538,6 +538,75 @@ public class Service {
 		}else{
 			System.out.println("getDataLogByDeviceID: 传感设备不存在");
 			return "{\"status\":\"Device not exist\"}";
+		}
+	}
+	
+	public String addAlarmRule(int UserID ,int SensingDeviceID ,int DataTypeID ,String Rule ,float Threshold){
+		boolean exist= db.existSensingDeviceByDeviceID(SensingDeviceID);
+		if(exist){
+			boolean flag = db.addAlarmRule(UserID ,SensingDeviceID ,DataTypeID ,Rule ,Threshold);
+			
+			if(flag==true){
+				System.out.println("addAlarmRule: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("addAlarmRule: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("addAlarmRule: 传感设备不存在");
+			return "{\"status\":\"SensingDevice not exist\"}";
+		}
+	}
+	
+	public String updateAlarmRule(int AlarmRuleID ,String Rule ,float Threshold){
+		boolean exist= db.existeAlarmRuleByAlarmRuleID(AlarmRuleID);
+		if(exist){
+			boolean flag = db.updateAlarmRule(AlarmRuleID ,Rule ,Threshold);
+			
+			if(flag==true){
+				System.out.println("updateAlarmRule: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("updateAlarmRule: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("updateAlarmRule: 数据类型不存在");
+			return "{\"status\":\"AlarmRule not exist\"}";
+		}
+	}
+	
+	public String deleteAlarmRule(int AlarmRuleID){
+		boolean exist= db.existeAlarmRuleByAlarmRuleID(AlarmRuleID);
+		if(exist){
+			boolean flag = db.deleteAlarmRule(AlarmRuleID);
+			
+			if(flag==true){
+				System.out.println("deleteAlarmRule: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("deleteAlarmRule: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("deleteAlarmRule: 数据类型不存在");
+			return "{\"status\":\"AlarmRule not exist\"}";
+		}
+	}
+	
+	public String  getAlarmRuleListByDeviceID(int DeviceID){
+		boolean exist= db.existSensingDeviceByDeviceID(DeviceID);
+		if(exist){
+			List<AlarmRule> value = db. getAlarmRuleListByDeviceID(DeviceID);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("AlarmRuleList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("getAlarmRuleListByDeviceID: 传感设备不存在");
+			return "{\"status\":\"SensingDevice not exist\"}";
 		}
 	}
 }

@@ -9,6 +9,10 @@ public class AlarmRule implements java.io.Serializable {
 
 	// Fields
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer AlarmRuleID;
 	private Integer SensingDeviceID;
 	private Integer UserID;

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.njupt.bean.AlarmRule;
 import com.njupt.bean.Configlog;
 import com.njupt.bean.Configtype;
 import com.njupt.bean.Controllingdevice;
@@ -435,7 +436,6 @@ public class Dao {
 	}
 	
 	public List<Project> queryProject(int userID , int count , int offset) {
-		// TODO Auto-generated method stub
 		List<Project> projectList = new ArrayList<Project>(); 
 		Project project;
 		
@@ -761,7 +761,6 @@ public class Dao {
 	}
 	
 	public List<Controllingdevice> queryUserControllingDevice(int userID , int count , int offset) {
-		// TODO Auto-generated method stub
 		List<Controllingdevice> controllingDeviceList = new ArrayList<Controllingdevice>(); 
 		Controllingdevice controllingdevice;
 		
@@ -873,7 +872,6 @@ public class Dao {
 	}
 	
 	public List<Controllingdevice> getControllingDeviceListByProjectID(int ProjectID) {
-		// TODO Auto-generated method stub
 		List<Controllingdevice> controllingDeviceList = new ArrayList<Controllingdevice>(); 
 		Controllingdevice controllingdevice;
 		
@@ -1084,7 +1082,6 @@ public class Dao {
 	}
 	
 	public List<Sensingdevice> queryUserSensingDevice(int userID , int count , int offset) {
-		// TODO Auto-generated method stub
 		List<Sensingdevice> sensingDeviceList = new ArrayList<Sensingdevice>(); 
 		Sensingdevice sensingdevice;
 		
@@ -1196,7 +1193,6 @@ public class Dao {
 	}
 	
 	public List<Sensingdevice> getSensingDeviceListByProjectID(int ProjectID){
-		// TODO Auto-generated method stub
 		List<Sensingdevice> sensingDeviceList = new ArrayList<Sensingdevice>(); 
 		Sensingdevice sensingdevice;
 		
@@ -1403,7 +1399,6 @@ public class Dao {
 	}
 	
 	public List<Configtype> getConfigTypeListByDeviceID(int DeviceID){
-		// TODO Auto-generated method stub
 		List<Configtype> ConfigTypeList = new ArrayList<Configtype>(); 
 		Configtype configtype;
 		
@@ -1606,7 +1601,6 @@ public class Dao {
 	}
 	
 	public List<Datatype> getDataTypeListByDeviceID(int DeviceID){
-		// TODO Auto-generated method stub
 		List<Datatype> DataTypeList = new ArrayList<Datatype>(); 
 		Datatype datetype;
 		
@@ -1928,6 +1922,39 @@ public class Dao {
 		return false;
 	}
 	
+	public boolean existeAlarmRuleByAlarmRuleID(int AlarmRuleID){
+		boolean value=false;
+		String sql = "select count(*) from alarmrule where AlarmRuleID=?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, AlarmRuleID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int res=rs.getInt(1);
+				if(res>0){
+					value=true;
+				}
+			}
+			System.out.println("existeAlarmRuleByAlarmRuleID: "+value);
+			return value;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return value;
+	}
+	
 	public Boolean deleteAlarmRule(int AlarmRuleID){
 		String sql = "DELETE FROM `alarmrule` WHERE `AlarmRuleID` = ?";
 		int flag=0;
@@ -1952,6 +1979,48 @@ public class Dao {
 			}
 		}
 		return false;
+	}
+	
+	public List<AlarmRule> getAlarmRuleListByDeviceID(int DeviceID){
+		List<AlarmRule> AlarmRuleList = new ArrayList<AlarmRule>(); 
+		AlarmRule alarmtype;
+		
+		String sql = "SELECT * FROM `alarmrule` WHERE `SensingDeviceID` = ?";
+
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DeviceID);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				alarmtype = new AlarmRule();
+				alarmtype.setAlarmRuleID(rs.getInt(1));
+				alarmtype.setSensingDeviceID(rs.getInt(2));
+				alarmtype.setUserID(rs.getInt(3));
+				alarmtype.setDataTypeID(rs.getInt(4));
+				alarmtype.setRule(rs.getString(5));
+				alarmtype.setThreshold(rs.getFloat(6));
+				
+				AlarmRuleList.add(alarmtype);
+			}
+			System.out.println("getAlarmRuleListByDeviceID: "+AlarmRuleList.toString());
+			return AlarmRuleList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return AlarmRuleList;
 	}
 	
 }
