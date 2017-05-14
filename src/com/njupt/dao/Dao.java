@@ -1899,9 +1899,10 @@ public class Dao {
 		try {
 			conn = ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, AlarmRuleID);
-			pstmt.setString(2, Rule);
-			pstmt.setFloat(3, Threshold);
+			
+			pstmt.setString(1, Rule);
+			pstmt.setFloat(2, Threshold);
+			pstmt.setInt(3, AlarmRuleID);
 				
 			int flag = pstmt.executeUpdate();
 			if(flag==1){
