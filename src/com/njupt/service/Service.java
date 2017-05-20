@@ -595,7 +595,7 @@ public class Service {
 		}
 	}
 	
-	public String  getAlarmRuleListByDeviceID(int DeviceID){
+	public String getAlarmRuleListByDeviceID(int DeviceID){
 		boolean exist= db.existSensingDeviceByDeviceID(DeviceID);
 		if(exist){
 			List<AlarmRule> value = db. getAlarmRuleListByDeviceID(DeviceID);

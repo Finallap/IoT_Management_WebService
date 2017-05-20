@@ -1986,7 +1986,10 @@ public class Dao {
 		List<AlarmRule> AlarmRuleList = new ArrayList<AlarmRule>(); 
 		AlarmRule alarmtype;
 		
-		String sql = "SELECT * FROM `alarmrule` WHERE `SensingDeviceID` = ?";
+		String sql = "SELECT `alarmrule`.*,`datatype`.`Type`"
+				+ " FROM `alarmrule`,`datatype`"
+				+ " WHERE `alarmrule`.`SensingDeviceID` = ?"
+				+ " AND `datatype`.`DataTypeID` = `alarmrule`.`DataTypeID`";
 
 		try {
 			conn = ds.getConnection();
@@ -2002,6 +2005,7 @@ public class Dao {
 				alarmtype.setDataTypeID(rs.getInt(4));
 				alarmtype.setRule(rs.getString(5));
 				alarmtype.setThreshold(rs.getFloat(6));
+				alarmtype.setDataTypeName(rs.getString(7));
 				
 				AlarmRuleList.add(alarmtype);
 			}

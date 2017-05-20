@@ -2,6 +2,7 @@ package com.njupt.service;
 
 import java.util.List;
 import net.sf.json.JSONObject;
+import com.njupt.bean.AlarmRule;
 import com.njupt.bean.Configlog;
 import com.njupt.bean.Configtype;
 import com.njupt.bean.Controllingdevice;
@@ -169,6 +170,24 @@ public class ServiceDelegate {
 			String end_date, int limite, int offset) {
 		return service.getDataLogByDeviceID(DeviceID, start_date, end_date,
 				limite, offset);
+	}
+
+	public String addAlarmRule(int UserID, int SensingDeviceID, int DataTypeID,
+			String Rule, float Threshold) {
+		return service.addAlarmRule(UserID, SensingDeviceID, DataTypeID, Rule,
+				Threshold);
+	}
+
+	public String updateAlarmRule(int AlarmRuleID, String Rule, float Threshold) {
+		return service.updateAlarmRule(AlarmRuleID, Rule, Threshold);
+	}
+
+	public String deleteAlarmRule(int AlarmRuleID) {
+		return service.deleteAlarmRule(AlarmRuleID);
+	}
+
+	public String getAlarmRuleListByDeviceID(int DeviceID) {
+		return service.getAlarmRuleListByDeviceID(DeviceID);
 	}
 
 }
