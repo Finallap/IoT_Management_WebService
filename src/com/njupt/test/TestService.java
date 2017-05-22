@@ -226,7 +226,7 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testAddAlarmRule(){
 		String result = se.addAlarmRule(1 ,4 ,2 ,">" ,25);
 		System.out.println(result);
@@ -238,15 +238,21 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testDeleteeAlarmRule(){
 		String result = se.deleteAlarmRule(1);
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testGetAlarmRuleListByDeviceID(){
 		String result = se.getAlarmRuleListByDeviceID(4);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testSddConfigLog(){
+		String result = se.addConfigLog(2,"ggg");
 		System.out.println(result);
 	}
 }

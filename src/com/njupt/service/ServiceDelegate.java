@@ -190,4 +190,8 @@ public class ServiceDelegate {
 		return service.getAlarmRuleListByDeviceID(DeviceID);
 	}
 
+	public String addConfigLog(int ConfigTypeID, String ConfigContent) {
+		return service.addConfigLog(ConfigTypeID, ConfigContent);
+	}
+
 }

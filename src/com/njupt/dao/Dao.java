@@ -2028,4 +2028,32 @@ public class Dao {
 		return AlarmRuleList;
 	}
 	
+	
+	public Boolean addConfigLog(int ConfigTypeID ,String ConfigContent){
+		String sql = "INSERT INTO `configlog` (`ConfigTypeID`, `ConfigContent`, `Savetime`) VALUES (?, ?, ?);";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ConfigTypeID);
+			pstmt.setString(2, ConfigContent);
+			pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
 }

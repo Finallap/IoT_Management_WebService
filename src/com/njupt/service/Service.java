@@ -609,4 +609,22 @@ public class Service {
 			return "{\"status\":\"SensingDevice not exist\"}";
 		}
 	}
+	
+	public String addConfigLog(int ConfigTypeID ,String ConfigContent){
+		boolean exist= db.existConfigTypeByTypeID(ConfigTypeID);
+		if(exist){
+			boolean flag = db.addConfigLog(ConfigTypeID ,ConfigContent);
+			
+			if(flag==true){
+				System.out.println("addConfigLog: success");
+				return "{\"status\":\"success\"}";
+			}else{
+				System.out.println("addConfigLog: failed");
+				return "{\"status\":\"failed\"}";
+			}
+		}else{
+			System.out.println("addConfigLog: 控制类型不存在");
+			return "{\"status\":\"ConfigType not exist\"}";
+		}
+	}
 }
