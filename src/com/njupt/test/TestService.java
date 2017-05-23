@@ -250,9 +250,15 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Test
-	public void testSddConfigLog(){
+	@Ignore
+	public void testAddConfigLog(){
 		String result = se.addConfigLog(2,"ggg");
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testGetAlarmDataByUserID(){
+		String result = se.getAlarmDataByUserID(1,"2017-05-02" ,"2017-05-30" ,-1,0);
 		System.out.println(result);
 	}
 }

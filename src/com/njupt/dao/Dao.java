@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.njupt.bean.AlarmData;
 import com.njupt.bean.AlarmRule;
 import com.njupt.bean.Configlog;
 import com.njupt.bean.Configtype;
@@ -1763,7 +1764,7 @@ public class Dao {
 		PreparedStatement pstmt = null;
 		
 		int result = 0;
-		String sql = "SELECT COUNT(*)"
+		String sql = "SELECT count(*)"
 				+ " FROM `devicedata`"
 				+ " WHERE `DataTypeID` in (select DataTypeID from datatype where SensingDeviceID = ?)"
 				+ " AND `Savetime` >= ?"
@@ -2055,5 +2056,116 @@ public class Dao {
 			}
 		}
 		return false;
+	}
+	
+	public int countAlarmDataByUserID(int UserID ,String start_date ,String end_date){
+		ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		int result = 0;
+		String sql = "SELECT COUNT(*)"
+				+ " FROM `alarmlist`,`alarmrule`"
+				+ " WHERE `alarmrule`.`UserID` = ?"
+				+ " AND `alarmlist`.`Savetime` >= ?"
+				+ " AND `alarmlist`.`Savetime` <= ?"
+				+ " AND `alarmlist`.`AlarmRuleID` = `alarmrule`.`AlarmRuleID`";
+				
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, UserID);
+			pstmt.setString(2, start_date);
+			pstmt.setString(3, end_date);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result=rs.getInt(1);
+			}
+			System.out.println("countAlarmDataByUserID: "+result);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public List<AlarmData> getAlarmDataByUserID(int UserID ,String start_date ,String end_date ,int limite ,int offset){
+		List<AlarmData> AlarmDataList = new ArrayList<AlarmData>(); 
+		AlarmData alarmdata;
+		
+		String sql = "SELECT `alarmlist`.*,`sensingdevice`.*"
+				+ " FROM `alarmlist`,`alarmrule`,`sensingdevice`"
+				+ " WHERE `alarmrule`.`UserID` = ?"
+				+ " AND `alarmlist`.`Savetime` >= ?"
+				+ " AND `alarmlist`.`Savetime` <= ?"
+				+ " AND `alarmlist`.`AlarmRuleID` = `alarmrule`.`AlarmRuleID`"
+				+ " AND `sensingdevice`.`SensingDeviceID` = `alarmrule`.`SensingDeviceID`"
+				+ " ORDER BY `alarmlist`.`Savetime` DESC";
+		if(limite>0)
+			sql = sql + " limit ?,?";
+		
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, UserID);
+			pstmt.setString(2, start_date);
+			pstmt.setString(3, end_date);
+			if(limite>0)
+			{
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, limite);
+			}
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				alarmdata = new AlarmData();
+				alarmdata.setAlarmListID(rs.getInt(1));
+				alarmdata.setAlarmRuleID(rs.getInt(2));
+				alarmdata.setAlarmRuleContent(rs.getString(3));
+				alarmdata.setActualValue(rs.getFloat(4));
+				alarmdata.setIsRead(rs.getInt(5));
+				alarmdata.setSensingDeviceId(rs.getInt(7));
+				alarmdata.setDeviceName(rs.getString(9));
+				
+				//将创建时间转换为String
+				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = "";
+				try{
+						createTime = sdf.format(rs.getTimestamp(6));   
+			       } catch (Exception e) {  
+			            e.printStackTrace();  
+			    }  
+				alarmdata.setSaveTime(createTime);
+				
+				AlarmDataList.add(alarmdata);
+			}
+			System.out.println("getAlarmDataByUserID: "+AlarmDataList.toString());
+			return AlarmDataList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return AlarmDataList;
 	}
 }

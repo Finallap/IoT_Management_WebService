@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 
+import com.njupt.bean.AlarmData;
 import com.njupt.bean.AlarmRule;
 import com.njupt.bean.Configlog;
 import com.njupt.bean.Configtype;
@@ -527,7 +528,7 @@ public class Service {
 	
 	public String getDataLogByDeviceID(int DeviceID ,String start_date ,String end_date ,int limite ,int offset){
 		boolean exist= db.existSensingDeviceByDeviceID(DeviceID);
-		if(exist){
+		if(exist){			
 			List<Devicedata> value = db.getDataLogByDeviceID(DeviceID ,start_date ,end_date ,limite ,offset);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status", "success");
@@ -625,6 +626,22 @@ public class Service {
 		}else{
 			System.out.println("addConfigLog: 控制类型不存在");
 			return "{\"status\":\"ConfigType not exist\"}";
+		}
+	}
+	
+	public String getAlarmDataByUserID(int UserID ,String start_date ,String end_date ,int limite ,int offset){
+		boolean exist= db.findByUserID(UserID);
+		if(exist){			
+			List<AlarmData> value = db.getAlarmDataByUserID(UserID ,start_date ,end_date ,limite ,offset);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "success");
+			jsonObject.put("count", db.countAlarmDataByUserID(UserID ,start_date ,end_date));
+			jsonObject.put("AlarmDataList", value);
+			
+			return jsonObject.toString();
+		}else{
+			System.out.println("getAlarmDataByUserID: 用户不存在");
+			return "{\"status\":\"User not exist\"}";
 		}
 	}
 }
