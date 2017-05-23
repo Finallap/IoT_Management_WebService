@@ -2,6 +2,7 @@ package com.njupt.service;
 
 import java.util.List;
 import net.sf.json.JSONObject;
+import com.njupt.bean.AlarmData;
 import com.njupt.bean.AlarmRule;
 import com.njupt.bean.Configlog;
 import com.njupt.bean.Configtype;
@@ -192,6 +193,12 @@ public class ServiceDelegate {
 
 	public String addConfigLog(int ConfigTypeID, String ConfigContent) {
 		return service.addConfigLog(ConfigTypeID, ConfigContent);
+	}
+
+	public String getAlarmDataByUserID(int UserID, String start_date,
+			String end_date, int limite, int offset) {
+		return service.getAlarmDataByUserID(UserID, start_date, end_date,
+				limite, offset);
 	}
 
 }
