@@ -2104,13 +2104,14 @@ public class Dao {
 		List<AlarmData> AlarmDataList = new ArrayList<AlarmData>(); 
 		AlarmData alarmdata;
 		
-		String sql = "SELECT `alarmlist`.*,`sensingdevice`.*"
-				+ " FROM `alarmlist`,`alarmrule`,`sensingdevice`"
+		String sql = "SELECT `alarmlist`.*,`sensingdevice`.*,`datatype`.*"
+				+ " FROM `alarmlist`,`alarmrule`,`sensingdevice`,`datatype`"
 				+ " WHERE `alarmrule`.`UserID` = ?"
 				+ " AND `alarmlist`.`Savetime` >= ?"
 				+ " AND `alarmlist`.`Savetime` <= ?"
 				+ " AND `alarmlist`.`AlarmRuleID` = `alarmrule`.`AlarmRuleID`"
 				+ " AND `sensingdevice`.`SensingDeviceID` = `alarmrule`.`SensingDeviceID`"
+				+ " AND `datatype`.`DataTypeID` = `alarmrule`.`DataTypeID`"
 				+ " ORDER BY `alarmlist`.`Savetime` DESC";
 		if(limite>0)
 			sql = sql + " limit ?,?";
@@ -2123,8 +2124,8 @@ public class Dao {
 			pstmt.setString(3, end_date);
 			if(limite>0)
 			{
-				pstmt.setInt(2, offset);
-				pstmt.setInt(3, limite);
+				pstmt.setInt(4, offset);
+				pstmt.setInt(5, limite);
 			}
 
 			rs = pstmt.executeQuery();
@@ -2137,6 +2138,9 @@ public class Dao {
 				alarmdata.setIsRead(rs.getInt(5));
 				alarmdata.setSensingDeviceId(rs.getInt(7));
 				alarmdata.setDeviceName(rs.getString(9));
+				alarmdata.setDataTypeID(rs.getInt(16));
+				alarmdata.setType(rs.getString(18));
+				alarmdata.setSymbol(rs.getString(20));
 				
 				//将创建时间转换为String
 				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -20,6 +20,9 @@ public class AlarmData implements java.io.Serializable {
 	private String saveTime;
 	private Integer sensingDeviceId;
 	private String deviceName;
+	private Integer dataTypeID;
+	private String type;
+	private String symbol;
 
 	// Constructors
 
@@ -29,7 +32,8 @@ public class AlarmData implements java.io.Serializable {
 
 	public AlarmData(Integer alarmListID, Integer alarmRuleID,
 			String alarmRuleContent, Float actualValue, Integer isRead,
-			String saveTime, Integer sensingDeviceId, String deviceName) {
+			String saveTime, Integer sensingDeviceId, String deviceName,
+			Integer dataTypeID, String type, String symbol) {
 		super();
 		this.alarmListID = alarmListID;
 		this.alarmRuleID = alarmRuleID;
@@ -39,6 +43,9 @@ public class AlarmData implements java.io.Serializable {
 		this.saveTime = saveTime;
 		this.sensingDeviceId = sensingDeviceId;
 		this.deviceName = deviceName;
+		this.dataTypeID = dataTypeID;
+		this.type = type;
+		this.symbol = symbol;
 	}
 
 	public Integer getAlarmListID() {
@@ -103,6 +110,30 @@ public class AlarmData implements java.io.Serializable {
 
 	public void setDeviceName(String deviceName) {
 		this.deviceName = deviceName;
+	}
+
+	public Integer getDataTypeID() {
+		return dataTypeID;
+	}
+
+	public void setDataTypeID(Integer dataTypeID) {
+		this.dataTypeID = dataTypeID;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
 	}
 
 }
