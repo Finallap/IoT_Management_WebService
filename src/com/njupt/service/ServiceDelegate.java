@@ -1,6 +1,11 @@
 package com.njupt.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javassist.bytecode.Descriptor.Iterator;
 import net.sf.json.JSONObject;
 import com.njupt.bean.AlarmData;
 import com.njupt.bean.AlarmRule;
@@ -199,6 +204,10 @@ public class ServiceDelegate {
 			String end_date, int limite, int offset) {
 		return service.getAlarmDataByUserID(UserID, start_date, end_date,
 				limite, offset);
+	}
+
+	public String addDataLog(String content) {
+		return service.addDataLog(content);
 	}
 
 }
