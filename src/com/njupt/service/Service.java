@@ -1,7 +1,12 @@
 package com.njupt.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import javassist.bytecode.Descriptor.Iterator;
 import net.sf.json.JSONObject;
 
 import com.njupt.bean.AlarmData;
@@ -631,7 +636,7 @@ public class Service {
 	
 	public String getAlarmDataByUserID(int UserID ,String start_date ,String end_date ,int limite ,int offset){
 		boolean exist= db.findByUserID(UserID);
-		if(exist){			
+		if(exist){
 			List<AlarmData> value = db.getAlarmDataByUserID(UserID ,start_date ,end_date ,limite ,offset);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status", "success");
@@ -643,5 +648,62 @@ public class Service {
 			System.out.println("getAlarmDataByUserID: 用户不存在");
 			return "{\"status\":\"User not exist\"}";
 		}
+	}
+	
+	public String addDataLog(String content){
+		String devicekey = "";
+		int deviceID = 0;
+		
+		Map<String,String> parameter = new HashMap<String,String>();  
+		
+		String[] parameterString = content.split("&");
+
+		for (int i = 0; i < parameterString.length; i++) {
+            String[] parameter_split = parameterString[i].split("=");
+            if(parameter_split.length==2){
+                 parameter.put(parameter_split[0], parameter_split[1]);
+            }
+        }
+		
+		devicekey = parameter.get("devicekey");
+		if(devicekey!="")
+			deviceID = db. getSensingDeviceIDByDeviceKey(devicekey);
+		else
+			return "{\"status\":\"DeviceKey not exist\"}";
+		
+		if(deviceID!=0){
+			for (String key : parameter.keySet()) {
+				if(!key.equals("devicekey")){
+					if(key!=""){
+						int DataTypeID = db. getDataTypeIDByMark(deviceID,key);
+						if(DataTypeID==0)return "{\"status\":\"DataType not exist\"}";
+						
+						float ActualValue = Float.parseFloat(parameter.get(key));
+						db.addDataLog(DataTypeID ,ActualValue);
+						
+						List<AlarmRule> AlarmRuleList = db.getAlarmRuleIDByDataTypeID(DataTypeID);
+						for(AlarmRule alarmrule:AlarmRuleList){
+							float Threshold = alarmrule.getThreshold();
+							String rule = alarmrule.getRule();
+							String DataTypeName = alarmrule.getDataTypeName();
+							
+							if(rule.equals("=")&&Math.abs(ActualValue-Threshold)<=0)
+								db.addAlarmLog(alarmrule.getAlarmRuleID(), DataTypeName+" = "+Threshold , ActualValue);
+							
+							if(rule.equals(">")&&ActualValue>Threshold)
+								db.addAlarmLog(alarmrule.getAlarmRuleID(), DataTypeName+" > "+Threshold , ActualValue);
+							
+							if(rule.equals("<")&&ActualValue<Threshold)
+								db.addAlarmLog(alarmrule.getAlarmRuleID(), DataTypeName+" < "+Threshold , ActualValue);
+				        }
+				        
+					}
+				}	
+			}
+		}
+		else
+			return "{\"status\":\"Device not exist\"}";
+
+		return "{\"status\":\"success\"}";
 	}
 }

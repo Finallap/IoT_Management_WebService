@@ -2172,4 +2172,167 @@ public class Dao {
 		}
 		return AlarmDataList;
 	}
+	
+	public Boolean addDataLog(int DataTypeID ,float Value){
+		String sql = "INSERT INTO `iot_management`.`devicedata` (`DataTypeID`, `Value`, `Savetime`) VALUES (?, ?, ?);";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DataTypeID);
+			pstmt.setFloat(2, Value);
+			pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public Boolean addAlarmLog(int AlarmRuleID ,String AlarmRuleContent,float ActualValue){
+		String sql = "INSERT INTO `iot_management`.`alarmlist` (`AlarmRuleID`, `AlarmRuleContent`, `ActualValue`, `isRead`, `SaveTime`) VALUES (?, ?, ?, ?, ?);";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, AlarmRuleID);
+			pstmt.setString(2, AlarmRuleContent);
+			pstmt.setFloat(3, ActualValue);
+			pstmt.setInt(4, 0);
+			pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+				
+			int flag = pstmt.executeUpdate();
+			if(flag==1){
+				return true;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	public int getSensingDeviceIDByDeviceKey(String DeviceKey){
+		int SensingDeviceID = 0;
+		String sql = "select * from sensingdevice WHERE `DeviceKey` = ?";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, DeviceKey);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				SensingDeviceID = rs.getInt(1);
+			}
+			
+			return SensingDeviceID;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+	
+	public int getDataTypeIDByMark(int deviceID,String mark){
+		int DataTypeID = 0;
+		String sql = "SELECT * FROM `datatype` WHERE `Mark` = ? AND `SensingDeviceID` = ?;";
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, mark);
+			pstmt.setInt(2, deviceID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				DataTypeID = rs.getInt(1);
+			}
+			
+			return DataTypeID;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+	
+	public List<AlarmRule> getAlarmRuleIDByDataTypeID(int DataTypeID){
+		List<AlarmRule> AlarmRuleList = new ArrayList<AlarmRule>(); 
+		AlarmRule alarmtype = null;
+		String sql = "SELECT `alarmrule`.*,`datatype`.`Type`"
+				+ " FROM `alarmrule`,`datatype`"
+				+ " WHERE `alarmrule`.`DataTypeID` = ?"
+				+ " AND `datatype`.`DataTypeID` = `alarmrule`.`DataTypeID`";
+		
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, DataTypeID);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				alarmtype = new AlarmRule();
+				alarmtype.setAlarmRuleID(rs.getInt(1));
+				alarmtype.setSensingDeviceID(rs.getInt(2));
+				alarmtype.setUserID(rs.getInt(3));
+				alarmtype.setDataTypeID(rs.getInt(4));
+				alarmtype.setRule(rs.getString(5));
+				alarmtype.setThreshold(rs.getFloat(6));
+				alarmtype.setDataTypeName(rs.getString(7));
+				
+				AlarmRuleList.add(alarmtype);
+			}
+			return AlarmRuleList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return AlarmRuleList;
+	}
 }

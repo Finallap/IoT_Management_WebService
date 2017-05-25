@@ -256,9 +256,15 @@ public class TestService {
 		System.out.println(result);
 	}
 	
-	@Test
+	@Ignore
 	public void testGetAlarmDataByUserID(){
 		String result = se.getAlarmDataByUserID(1,"2017-05-02" ,"2017-05-30" ,-1,0);
+		System.out.println(result);
+	}
+	
+	@Test
+	public void testAddDataLog(){
+		String result = se.addDataLog("devicekey=dfdsfsafdsafdsagfgdgfd&temperature=33.3&humidity=50");
 		System.out.println(result);
 	}
 }
